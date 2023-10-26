@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import dayjs from 'dayjs';
 import { styled } from 'styled-components';
 import { useModal } from '@/hooks/useModal';
-import { CalAnnualModal } from '../Modals/CalAnnualModal';
-import { CalDutylModal } from '../Modals/CalDutyModal';
+import { CalAnnualModal } from '@/components/Modals/CalAnnualModal';
+import { CalDutylModal } from '@/components/Modals/CalDutyModal';
 import { Schedule } from '@/lib/types';
 import { getLevel } from '@/utils/decode';
+import dayjs from 'dayjs';
 
 const CalendarBody = ({
   scheduleData,
@@ -59,6 +59,7 @@ const CalendarBody = ({
     }
     return days;
   };
+
   const mapToDate = (dateArray: dayjs.Dayjs[]) => {
     return dateArray.map((date, index) => {
       const dateObj = dayjs(date);
@@ -68,6 +69,7 @@ const CalendarBody = ({
       Object.keys(calendarData).map(item => {
         const index = parseInt(item, 10);
         const cal = calendarData[index];
+
         //휴가 출력
         if (cal.category === 'ANNUAL') {
           if (dayjs(cal.endDate).diff(cal.startDate, 'day') > 0) {
@@ -89,6 +91,7 @@ const CalendarBody = ({
             }
           }
         }
+
         //당직 출력
         if (cal.category === 'DUTY' && cal.endDate === dateObj.format('YYYY-MM-DD')) {
           arrDuty.push(cal.name, cal.level);
@@ -189,6 +192,7 @@ const Container = styled.div`
   border-bottom-left-radius: 8px;
   background-color: ${props => props.theme.white};
   box-sizing: border-box;
+
   .dates {
     position: relative;
     display: flex;
@@ -199,12 +203,14 @@ const Container = styled.div`
     border-right: 1px solid ${props => props.theme.gray};
     padding: 5px;
     font-weight: 700;
+
     //날짜
     .calendar-date {
       position: absolute;
       top: 5px;
       left: 5px;
     }
+
     &.today {
       border: 3px solid ${props => props.theme.secondary};
       .calendar-date {
@@ -239,6 +245,7 @@ const Duty = styled.div`
   box-sizing: border-box;
   font-size: 0.9rem;
   cursor: pointer;
+
   .duty-name {
     margin-right: 5px;
     font-weight: 700;
