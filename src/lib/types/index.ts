@@ -57,6 +57,19 @@ export interface Department {
   deptId: number;
 }
 
+// 요청 내역 확인
+export interface Request {
+  id: number;
+  user_id: number;
+  hospital_id: number;
+  category: string;
+  startDate: string;
+  endDate: string;
+  evaluation: string;
+  createdAt: string;
+  updated_at: string;
+}
+
 // 비밀번호 변경 (API)
 export interface EditPasswordBody {
   newPassword: string;
