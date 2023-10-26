@@ -1,11 +1,12 @@
-import styled from 'styled-components';
+import { ATTENDANCE_TEXTS } from '@/constants/attendance';
 import DashBoard from '@/components/DashBoard';
+import styled from 'styled-components';
 
 const Attendance = () => {
   return (
     <Container>
       <Title>
-        <h2>근무 관리</h2>
+        <h2>{ATTENDANCE_TEXTS.title}</h2>
       </Title>
       <DashBoard day="9시간 20분" week="85시간 30분" month="123시간 50분" />
     </Container>
