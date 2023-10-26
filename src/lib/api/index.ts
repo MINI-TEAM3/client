@@ -12,7 +12,7 @@ import {
 
 const host =
   window.location.hostname === 'localhost'
-    ? 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com'
+    ? 'http://ec2-15-164-101-55.ap-northeast-2.compute.amazonaws.com:8080/'
     : 'api';
 
 const instance = axios.create({
