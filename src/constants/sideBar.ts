@@ -1,4 +1,4 @@
-export const SIDE_BAR_TEXTS = {
+export const SIDE_BAR_TEXTS = Object.freeze({
   calendar: '전체 캘린더',
   request: '요청 내역 확인',
   myPage: '마이페이지',
@@ -9,4 +9,4 @@ export const SIDE_BAR_TEXTS = {
   duty: '이번달 당직',
   logout: '로그아웃',
   mark: '©Dr.Cal',
-};
+});
