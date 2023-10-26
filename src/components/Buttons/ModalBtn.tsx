@@ -1,8 +1,9 @@
 import { ModalBtnProps } from '@/lib/types';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import styled from 'styled-components';
 
 const ModalBtn = ({ handler }: ModalBtnProps) => {
-  return <Container onClick={handler}>신청하기</Container>;
+  return <Container onClick={handler}>{BUTTON_TEXTS.apply}</Container>;
 };
 
 export default ModalBtn;

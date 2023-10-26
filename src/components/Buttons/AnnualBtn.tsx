@@ -1,6 +1,7 @@
 import { useModal } from '@/hooks/useModal';
+import { RequestModal } from '@/components/Modals/RequestModal';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import styled from 'styled-components';
-import { RequestModal } from '../Modals/RequestModal';
 
 const AnnualBtn = () => {
   const { openModal } = useModal();
@@ -11,7 +12,7 @@ const AnnualBtn = () => {
     content: <RequestModal type={'annual'} />,
   };
 
-  return <Container onClick={() => openModal(modalData)}>휴가 신청</Container>;
+  return <Container onClick={() => openModal(modalData)}>{BUTTON_TEXTS.annual}</Container>;
 };
 
 export default AnnualBtn;

@@ -1,7 +1,8 @@
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import styled from 'styled-components';
 
 const ApplyBtn = () => {
-  return <Container>승인</Container>;
+  return <Container>{BUTTON_TEXTS.approve}</Container>;
 };
 
 export default ApplyBtn;

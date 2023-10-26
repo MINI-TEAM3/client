@@ -1,7 +1,8 @@
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import styled from 'styled-components';
 
 const RejectBtn = () => {
-  return <Container>반려</Container>;
+  return <Container>{BUTTON_TEXTS.reject}</Container>;
 };
 
 export default RejectBtn;
