@@ -5,12 +5,7 @@ import styled from 'styled-components';
 import { editPassword, logout } from '@/lib/api';
 import { useNavigate } from 'react-router';
 import { FiAlertCircle } from 'react-icons/fi';
-
-interface EditPasswordBody {
-  oldPassword: string;
-  newPassword: string;
-  pwCheck: string;
-}
+import { EditPasswordForm } from '@/lib/types';
 
 const UserInfo = () => {
   const {
@@ -18,7 +13,7 @@ const UserInfo = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<EditPasswordBody>({ mode: 'onChange' });
+  } = useForm<EditPasswordForm>({ mode: 'onChange' });
 
   const navigate = useNavigate();
 

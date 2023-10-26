@@ -3,9 +3,10 @@ import {
   LoginBody,
   SignUpBody,
   EditMyPageBody,
-  editPasswordBody,
+  EditPasswordBody,
   CreateAnnualBody,
   EditAnnualBody,
+  CancelAnnualBody,
   CreateDutyBody,
   EditDutyBody,
 } from '@/lib/types';
@@ -81,7 +82,7 @@ export const editMyPage = async (body: EditMyPageBody) => {
 };
 
 // 비밀번호 변경
-export const editPassword = async (body: editPasswordBody) => {
+export const editPassword = async (body: EditPasswordBody) => {
   try {
     const res = await instance.post('/user/updatePassword', body, {
       headers: {
@@ -179,11 +180,7 @@ export const editAnnual = async (body: EditAnnualBody, scheduleId: number) => {
   }
 };
 
-// 연차 신청 취소
-interface cancelAnnualBody {
-  id: number;
-}
-export const cancelAnnual = async (scheduleId: number, body: cancelAnnualBody) => {
+export const cancelAnnual = async (scheduleId: number, body: CancelAnnualBody) => {
   try {
     const res = await instance.post(`/schedule/annual/delete?id=${scheduleId}`, body, {
       headers: {

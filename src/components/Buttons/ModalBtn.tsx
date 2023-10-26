@@ -1,10 +1,7 @@
+import { ModalBtnProps } from '@/lib/types';
 import styled from 'styled-components';
 
-interface ModalBtnProps {
-  handler: () => void;
-}
-
-const ModalBtn: React.FC<ModalBtnProps> = ({ handler }) => {
+const ModalBtn = ({ handler }: ModalBtnProps) => {
   return <Container onClick={handler}>신청하기</Container>;
 };
 

@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react';
 import { getDuty } from '@/lib/api';
 import { styled } from 'styled-components';
 import { getLevel, getPhone } from '@/utils/decode';
-import { DutyData } from '@/lib/types';
-
-interface ProfileProps {
-  $imgurl: null | string;
-}
+import { DutyData, ProfileProps } from '@/lib/types';
 
 const DutyDataInitial = {
   deptName: '',

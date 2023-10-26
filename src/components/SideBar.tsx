@@ -11,20 +11,7 @@ import { logout, getMyPage } from '@/lib/api';
 import { useRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
-
-interface MenuItemProps {
-  to: string;
-  onClick?: () => void;
-  isactive?: string;
-}
-
-interface SubMenuProps {
-  open?: boolean;
-}
-
-interface ProgressProps {
-  $percent: number;
-}
+import { MenuItemProps, SubMenuProps, ProgressProps } from '@/lib/types';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);

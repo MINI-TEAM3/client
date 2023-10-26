@@ -10,22 +10,7 @@ import { useRecoilState } from 'recoil';
 import { login, editMyPage } from '@/lib/api';
 import { FiAlertCircle } from 'react-icons/fi';
 import Loading from '@/components/Loading';
-
-interface ProfileBody {
-  name: string;
-  password: string;
-  deptName: string;
-  phone: string;
-  originImage: FileList;
-}
-
-interface Password {
-  password: string;
-}
-
-interface deptDecode {
-  [key: number]: string;
-}
+import { ProfileBody, Password, DeptDecode } from '@/lib/types';
 
 const UserInfo = () => {
   const {
@@ -74,7 +59,7 @@ const UserInfo = () => {
   // 개인정보 수정
   const editUserInfo = async ({ name = user.name, deptName, phone = user.phone, originImage }: ProfileBody) => {
     // 과 ID 찾기
-    const findKeyByValue = (obj: deptDecode, value: string) => {
+    const findKeyByValue = (obj: DeptDecode, value: string) => {
       for (const key in obj) {
         if (obj[key] === value) {
           return Number(key);

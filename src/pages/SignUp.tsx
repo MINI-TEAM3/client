@@ -15,26 +15,7 @@ import styled from 'styled-components';
 import { FiAlertCircle } from 'react-icons/fi';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
-
-interface SignUpBody {
-  email: string;
-  password: string;
-  pwCheck: string;
-  name: string;
-  hospital: string;
-  dept: string;
-  phone: string;
-}
-
-interface Hospital {
-  hospitalName: string;
-  hospitalId: number;
-}
-
-interface Department {
-  deptName: string;
-  deptId: number;
-}
+import { SignUpBody, SignUpForm, Hospital, Department } from '@/lib/types';
 
 const SignUp = () => {
   const [hospitalList, setHospitalList] = useState<string[]>([]);
@@ -47,7 +28,7 @@ const SignUp = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<SignUpBody>({ mode: 'onChange' });
+  } = useForm<SignUpForm>({ mode: 'onChange' });
 
   const navigate = useNavigate();
 
@@ -125,10 +106,10 @@ const SignUp = () => {
   return (
     <Container>
       <ImgContainer1 />
-      <Textwrap>
+      <TextWrap>
         <span>대학병원 의사들을 위한</span>
         <span>쉽고 빠른 연차 당직 관리 서비스</span>
-      </Textwrap>
+      </TextWrap>
       <ImgContainer2 />
 
       <SignUpFormContainer onSubmit={handleSubmit(userSignUp)}>
@@ -332,7 +313,7 @@ const ImgContainer2 = styled.div`
   bottom: 580px;
   left: 100px;
 `;
-const Textwrap = styled.div`
+const TextWrap = styled.div`
   color: ${props => props.theme.white};
   font-size: 18px;
   display: flex;

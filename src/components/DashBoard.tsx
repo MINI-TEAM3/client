@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import { DASH_BOARD_TEXTS } from '@/constants/dashBoard';
-
-interface DashBoardProps {
-  day: string;
-  week: string;
-  month: string;
-}
+import { DashBoardProps } from '@/lib/types';
 
 const DashBoard = ({ day = '-', week = '-', month = '-' }: DashBoardProps) => {
   return (

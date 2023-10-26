@@ -8,13 +8,7 @@ import { FiAlertCircle } from 'react-icons/fi';
 import CheckModal from './checkModal';
 import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '@/states/stateScheduleId';
-
-type DataBody = {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  reason: string;
-};
+import { DataBody } from '@/lib/types';
 
 export const RequestModal = ({ type }: { type: string }) => {
   const scheduleId = useRecoilValue(scheduleIdState);
@@ -149,6 +143,7 @@ const InputContainer = styled.div`
     }
   }
 `;
+
 const InfoBox = styled.div`
   display: flex;
   align-items: center;
