@@ -1,3 +1,4 @@
+import { MODAL_TEXTS } from '@/constants/modals';
 import { useModal } from '@/hooks/useModal';
 import { cancelAnnual } from '@/lib/api';
 import { useNavigate } from 'react-router';
@@ -23,13 +24,13 @@ const CheckModal = ({ type }: { type: string | number }) => {
 
   return (
     <Container>
-      {typeof type === 'string' && <div>신청내역을 확인하시겠습니까?</div>}
+      {typeof type === 'string' && <div>{MODAL_TEXTS.check}</div>}
       <BtnWrap>
         <AnswerBtn className="yseBtn" onClick={() => handleOnClickYes()}>
-          네
+          {MODAL_TEXTS.yes}
         </AnswerBtn>
         <AnswerBtn className="noBtn" onClick={() => closeModal()}>
-          아니오
+          {MODAL_TEXTS.no}
         </AnswerBtn>
       </BtnWrap>
     </Container>

@@ -1,13 +1,14 @@
-import Loading from '@/components/Loading';
-import { RequestModal } from '@/components/Modals/RequestModal';
-import CheckModal from '@/components/Modals/checkModal';
 import { useModal } from '@/hooks/useModal';
 import { getRequest } from '@/lib/api';
 import { scheduleIdState } from '@/states/stateScheduleId';
 import { UserDataState } from '@/states/stateUserdata';
-import { getCategory, getEvaluation } from '@/utils/decode';
+import { getCategory } from '@/utils/getCategory';
+import { getEvaluation } from '@/utils/getEvaluation';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { RequestModal } from '@/components/Modals/RequestModal';
+import Loading from '@/components/Loading';
+import CheckModal from '@/components/Modals/checkModal';
 import styled from 'styled-components';
 
 type Request = {
