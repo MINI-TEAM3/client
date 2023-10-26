@@ -15,7 +15,7 @@ import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 interface MenuItemProps {
   to: string;
   onClick?: () => void;
-  isActive?: string;
+  isactive?: string;
 }
 
 interface SubMenuProps {
@@ -79,7 +79,7 @@ const SideBar = () => {
           <FaRegPaperPlane />
           <span>{SIDE_BAR_TEXTS.request}</span>
         </MenuItem>
-        <MenuItem to="/userinfo" onClick={handleClickMyPage} isActive={isMyPageActive}>
+        <MenuItem to="/userinfo" onClick={handleClickMyPage} isactive={isMyPageActive}>
           <BsFillPersonFill />
           <span className="mypage">{SIDE_BAR_TEXTS.myPage}</span>
         </MenuItem>
