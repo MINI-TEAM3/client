@@ -1,0 +1,28 @@
+export const SIGN_UP_TEXTS = Object.freeze({
+  title: `대학병원 의사들을 위한\n쉽고 빠른 연차 당직 관리 서비스`,
+  signup: '회원가입',
+  login: '로그인',
+  accountInfo: '가입 정보',
+  userInfo: '유저 정보',
+  email: 'Email',
+  password: 'Password',
+  checkPW: 'Password Check',
+  name: 'Name',
+  hospital: 'Hospital',
+  dept: 'Department',
+  phone: 'Phone Number',
+  yesAccount: '계정이 이미 있으신가요?',
+  placeholder: {
+    email: 'kim@doctor.kr',
+    password: '8자 이상의 비밀번호를 입력해 주세요.',
+    checkPW: '비밀번호를 다시 입력해 주세요.',
+    name: '김의사',
+    hospital: '재직 병원을 선택해 주세요.',
+    dept: '근무 파트를 선택해 주세요.',
+    phone: '하이픈(-) 없이 입력하세요.',
+  },
+  validation: {
+    required: '비밀번호 확인은 필수 입력입니다.',
+    message: '',
+  },
+});
