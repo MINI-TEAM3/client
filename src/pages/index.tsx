@@ -7,6 +7,7 @@ import RequestList from '@/pages/RequestList';
 import UserInfo from '@/pages/UserInfo';
 import Layout from '@/pages/Layout';
 import Password from '@/pages/Password';
+import Attendance from '@/pages/Attendance';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
           {
             path: '/password',
             element: <Password />,
+          },
+          {
+            path: '/attendance',
+            element: <Attendance />,
           },
         ],
       },

@@ -10,20 +10,8 @@ import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage } from '@/lib/api';
 import { useRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
-
-interface MenuItemProps {
-  to: string;
-  onClick?: () => void;
-  isactive?: string;
-}
-
-interface SubMenuProps {
-  open?: boolean;
-}
-
-interface ProgressProps {
-  $percent: number;
-}
+import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
+import { MenuItemProps, SubMenuProps, ProgressProps } from '@/lib/types';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
@@ -72,23 +60,26 @@ const SideBar = () => {
       <Menu>
         <MenuItem to="/" onClick={handleClickMenu}>
           <AiOutlineClockCircle />
-          <span>전체 캘린더</span>
+          <span>{SIDE_BAR_TEXTS.calendar}</span>
         </MenuItem>
         <MenuItem to="/request" onClick={handleClickMenu}>
           <FaRegPaperPlane />
-          <span>요청 내역 확인</span>
+          <span>{SIDE_BAR_TEXTS.request}</span>
         </MenuItem>
         <MenuItem to="/userinfo" onClick={handleClickMyPage} isactive={isMyPageActive}>
           <BsFillPersonFill />
-          <span className="mypage">마이페이지</span>
+          <span className="mypage">{SIDE_BAR_TEXTS.myPage}</span>
         </MenuItem>
       </Menu>
       <SubMenu open={isSubMenuOpen}>
         <SubMenuItem to="/userinfo" onClick={handleClickSubMenu}>
-          개인정보 수정
+          {SIDE_BAR_TEXTS.userInfo}
         </SubMenuItem>
         <SubMenuItem to="/password" onClick={handleClickSubMenu}>
-          비밀번호 변경
+          {SIDE_BAR_TEXTS.password}
+        </SubMenuItem>
+        <SubMenuItem to="/attendance" onClick={handleClickSubMenu}>
+          {SIDE_BAR_TEXTS.attendance}
         </SubMenuItem>
       </SubMenu>
 
@@ -100,14 +91,14 @@ const SideBar = () => {
         </UserInfo>
         <UserSchedule>
           <DataRow>
-            <span className="label">남은 연차</span>
+            <span className="label">{SIDE_BAR_TEXTS.annual}</span>
             <ProgressBar>
               <Progress className="annual" $percent={percentData(User.annual, 15)}></Progress>
             </ProgressBar>
             <span className="label-date">{User.annual}일</span>
           </DataRow>
           <DataRow>
-            <span className="label">이번달 당직</span>
+            <span className="label">{SIDE_BAR_TEXTS.duty}</span>
             <ProgressBar>
               <Progress className="duty" $percent={percentData(User.duty, 3)}></Progress>
             </ProgressBar>
@@ -116,8 +107,8 @@ const SideBar = () => {
         </UserSchedule>
         <AnnualBtn />
         <DutyBtn />
-        <LogoutBtn onClick={handleClickLogout}>로그아웃</LogoutBtn>
-        <Mark>©Dr.Cal</Mark>
+        <LogoutBtn onClick={handleClickLogout}>{SIDE_BAR_TEXTS.logout}</LogoutBtn>
+        <Mark>{SIDE_BAR_TEXTS.mark}</Mark>
       </Wrapper>
     </Container>
   );

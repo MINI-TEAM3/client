@@ -3,16 +3,17 @@ import {
   LoginBody,
   SignUpBody,
   EditMyPageBody,
-  editPasswordBody,
+  EditPasswordBody,
   CreateAnnualBody,
   EditAnnualBody,
+  CancelAnnualBody,
   CreateDutyBody,
   EditDutyBody,
 } from '@/lib/types';
 
 const host =
   window.location.hostname === 'localhost'
-    ? 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com'
+    ? 'http://ec2-15-164-101-55.ap-northeast-2.compute.amazonaws.com:8080/'
     : 'api';
 
 const instance = axios.create({
@@ -81,7 +82,7 @@ export const editMyPage = async (body: EditMyPageBody) => {
 };
 
 // 비밀번호 변경
-export const editPassword = async (body: editPasswordBody) => {
+export const editPassword = async (body: EditPasswordBody) => {
   try {
     const res = await instance.post('/user/updatePassword', body, {
       headers: {
@@ -179,11 +180,7 @@ export const editAnnual = async (body: EditAnnualBody, scheduleId: number) => {
   }
 };
 
-// 연차 신청 취소
-interface cancelAnnualBody {
-  id: number;
-}
-export const cancelAnnual = async (scheduleId: number, body: cancelAnnualBody) => {
+export const cancelAnnual = async (scheduleId: number, body: CancelAnnualBody) => {
   try {
     const res = await instance.post(`/schedule/annual/delete?id=${scheduleId}`, body, {
       headers: {

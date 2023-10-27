@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getAnnual } from '@/lib/api';
 import { styled } from 'styled-components';
-import { getLevel, getPhone } from '@/utils/decode';
+import { getLevel } from '@/utils/decode';
+import { getPhone } from '@/utils/getPhone';
 import { AnnualData } from '@/lib/types';
+import { MODAL_TEXTS } from '@/constants/modals';
 
 export const CalAnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);
@@ -19,17 +21,17 @@ export const CalAnnualModal = ({ date }: { date: string }) => {
       <DateWrap>{date}</DateWrap>
       <TableContainer>
         <DataWrap>
-          <div>No.</div>
-          <div>이름</div>
-          <div className="part">파트</div>
-          <div>직급</div>
-          <div>연락처</div>
+          <div>{MODAL_TEXTS.number}</div>
+          <div>{MODAL_TEXTS.name}</div>
+          <div className="dept">{MODAL_TEXTS.dept}</div>
+          <div>{MODAL_TEXTS.level}</div>
+          <div>{MODAL_TEXTS.phone}</div>
         </DataWrap>
         {annual.map((item, index) => (
           <DataWrap key={index}>
             <div>{index + 1}</div>
             <div>{item.username}</div>
-            <div className="part">{item.deptName}</div>
+            <div className="dept">{item.deptName}</div>
             <div>{getLevel(item.level)}</div>
             <div>{getPhone(item.phone)}</div>
           </DataWrap>
@@ -66,9 +68,11 @@ const DataWrap = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+
   &:first-child {
     font-weight: 900;
   }
+
   div {
     flex: 2;
     &:first-child {
@@ -77,7 +81,7 @@ const DataWrap = styled.div`
     &:last-child {
       flex: 3;
     }
-    &.part {
+    &.dept {
       flex: 3;
     }
   }

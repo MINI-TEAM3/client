@@ -1,9 +1,11 @@
-import { styled } from 'styled-components';
-import ExelBtn from '../Buttons/ExelBtn';
 import { useState } from 'react';
 import { Schedule } from '@/lib/types';
-import { getLevel, getDataCategory } from '@/utils/decode';
+import { getLevel } from '@/utils/decode';
+import { getDataCategory } from '@/utils/getDataCategory';
+import { CALENDAR_TEXTS } from '@/constants/calendar';
+import ExelBtn from '../Buttons/ExelBtn';
 import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const CalendarList = ({ scheduleData }: { scheduleData: Schedule[] }) => {
   const [listData] = useState<Schedule[]>(scheduleData);
@@ -16,12 +18,12 @@ const CalendarList = ({ scheduleData }: { scheduleData: Schedule[] }) => {
         <ExelBtn data={sortedData} />
       </Header>
       <ListHead>
-        <span className="category">유형</span>
-        <span className="dept">파트</span>
-        <span className="name">이름</span>
-        <span className="level">직급</span>
-        <span className="date start-date">시작날짜</span>
-        <span className="date end-date">종료날짜</span>
+        <span className="category">{CALENDAR_TEXTS.category}</span>
+        <span className="dept">{CALENDAR_TEXTS.dept}</span>
+        <span className="name">{CALENDAR_TEXTS.name}</span>
+        <span className="level">{CALENDAR_TEXTS.level}</span>
+        <span className="date start-date">{CALENDAR_TEXTS.startDate}</span>
+        <span className="date end-date">{CALENDAR_TEXTS.endDate}</span>
       </ListHead>
       <ListBody>
         {sortedData.map((data, index) => (
@@ -61,6 +63,7 @@ const ListHead = styled.div`
   border-top-right-radius: 8px;
   background-color: ${props => props.theme.white};
   box-sizing: border-box;
+
   span {
     display: flex;
     justify-content: center;
@@ -68,6 +71,7 @@ const ListHead = styled.div`
     flex-basis: 0;
     box-sizing: border-box;
   }
+
   .date {
     flex-grow: 1.5;
   }
@@ -107,9 +111,11 @@ const ListItem = styled.div`
   height: 30px;
   border-bottom: 1px solid ${props => props.theme.gray};
   color: ${props => props.theme.black};
+
   &.line {
     background-color: ${props => props.theme.bgColor};
   }
+
   span {
     display: flex;
     justify-content: center;
@@ -118,6 +124,7 @@ const ListItem = styled.div`
     height: 100%;
     border-right: 1px solid ${props => props.theme.gray};
   }
+
   .date {
     flex-grow: 1.5;
   }

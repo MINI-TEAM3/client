@@ -1,17 +1,6 @@
-interface Hospital {
-  hospital: string;
-  dept: deptDecode;
-}
+import { HospitalListDecode, DeptNameDecode } from '@/lib/types';
 
-interface hospitalDecode {
-  [key: number]: Hospital;
-}
-
-interface deptDecode {
-  [key: number]: string;
-}
-
-export const hospitalDecode: hospitalDecode = {
+export const hospitalDecode: HospitalListDecode = {
   1: {
     hospital: '서울대학교 병원',
     dept: {
@@ -74,11 +63,7 @@ export const getLevel = (level: string) => {
   }
 };
 
-interface deptName {
-  [key: number]: string;
-}
-
-export const deptName: deptName = {
+export const deptName: DeptNameDecode = {
   1: '응급의학과',
   2: '내과',
   3: '외과',
@@ -112,37 +97,4 @@ export const deptName: deptName = {
   31: '정형외과',
   32: '핵의학과',
   33: '가정의학과',
-};
-
-export const getPhone = (phone: string) => {
-  const part = phone.match(/^(\d{3})(\d{4})(\d{0,4})$/);
-  if (part === null) return phone;
-  return `${part[1]}-${part[2]}-${part[3]}`;
-};
-
-export const getCategory = (category: string, evaluation: string) => {
-  if (category === 'DUTY' && evaluation !== 'APPROVED') {
-    return '당직 변경 신청';
-  } else if (category === 'DUTY' && evaluation === 'APPROVED') {
-    return '당직';
-  } else {
-    return '휴가 신청';
-  }
-};
-
-export const getEvaluation = (eveluation: string) => {
-  if (eveluation === 'STANDBY') {
-    return '대기';
-  } else if (eveluation === 'APPROVED' || eveluation === 'COMPLETED') {
-    return '승인';
-  } else if (eveluation === 'REJECTED') {
-    return '반려';
-  } else if (eveluation === 'CANCELED') {
-    return '취소';
-  }
-};
-
-export const getDataCategory = (category: string) => {
-  if (category === 'DUTY') return '당직';
-  else if (category === 'ANNUAL') return '휴가';
 };

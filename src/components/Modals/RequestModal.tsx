@@ -1,20 +1,15 @@
-import { styled } from 'styled-components';
-import Btn from '@/components/Buttons/Btn';
 import { useForm } from 'react-hook-form';
 import { createAnnual, editAnnual, editDuty, getDuty } from '@/lib/api';
 import { useModal } from '@/hooks/useModal';
 import { useState } from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
-import CheckModal from './checkModal';
 import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '@/states/stateScheduleId';
-
-type DataBody = {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  reason: string;
-};
+import { DataBody } from '@/lib/types';
+import { MODAL_TEXTS } from '@/constants/modals';
+import Btn from '@/components/Buttons/Btn';
+import CheckModal from '@/components/Modals/checkModal';
+import styled from 'styled-components';
 
 export const RequestModal = ({ type }: { type: string }) => {
   const scheduleId = useRecoilValue(scheduleIdState);
@@ -30,6 +25,7 @@ export const RequestModal = ({ type }: { type: string }) => {
 
   const onSubmit = async (data: DataBody) => {
     setErrorMessage('');
+
     if (type === 'annual') {
       try {
         await createAnnual({
@@ -40,10 +36,10 @@ export const RequestModal = ({ type }: { type: string }) => {
         closeModal();
         openModal(modalData);
       } catch (error) {
-        setErrorMessage('연차 등록 요청에 실패하였습니다.');
-        console.error('연차 등록 요청 실패', error);
+        setErrorMessage(MODAL_TEXTS.errors.failApplyAnnual);
       }
     }
+
     if (type === 'duty') {
       console.log(data.startDate, data.endDate);
       try {
@@ -56,17 +52,16 @@ export const RequestModal = ({ type }: { type: string }) => {
             closeModal();
             openModal(modalData);
           } catch (error) {
-            setErrorMessage('당직 변경 요청에 실패하였습니다.');
-            console.error('당직 변경 요청 실패', error);
+            setErrorMessage(MODAL_TEXTS.errors.failEditDuty);
           }
         } else {
-          setErrorMessage('기존 날짜에 당직 스케쥴이 없습니다.');
+          setErrorMessage(MODAL_TEXTS.errors.noDuty);
         }
       } catch (error) {
-        setErrorMessage('기존 날짜에 당직 스케쥴이 없습니다.');
-        console.error('기존 날짜에 당직 스케쥴이 없습니다.', error);
+        setErrorMessage(MODAL_TEXTS.errors.noDuty);
       }
     }
+
     if (type === 'annualEdit') {
       try {
         await editAnnual(
@@ -80,8 +75,7 @@ export const RequestModal = ({ type }: { type: string }) => {
         closeModal();
         openModal(modalData);
       } catch (error) {
-        setErrorMessage('연차 수정 요청에 실패하였습니다.');
-        console.error('연차 수정 요청 실패', error);
+        setErrorMessage(MODAL_TEXTS.errors.failEditAnnual);
       }
     }
   };
@@ -98,7 +92,7 @@ export const RequestModal = ({ type }: { type: string }) => {
       </InputContainer>
       {(type === 'annual' || type === 'annualEdit') && (
         <InputContainer>
-          <div className="inputTitle">신청 사유</div>
+          <div className="inputTitle">{MODAL_TEXTS.reason}</div>
           <textarea className="reasonBox" {...register('reason')} />
         </InputContainer>
       )}
@@ -108,7 +102,7 @@ export const RequestModal = ({ type }: { type: string }) => {
           <span className="info-text">{errorMessage}</span>
         </InfoBox>
       )}
-      <Btn content={'신청하기'} />
+      <Btn content={MODAL_TEXTS.apply} />
     </Container>
   );
 };
@@ -149,6 +143,7 @@ const InputContainer = styled.div`
     }
   }
 `;
+
 const InfoBox = styled.div`
   display: flex;
   align-items: center;

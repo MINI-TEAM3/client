@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getDuty } from '@/lib/api';
 import { styled } from 'styled-components';
-import { getLevel, getPhone } from '@/utils/decode';
-import { DutyData } from '@/lib/types';
-
-interface ProfileProps {
-  $imgurl: null | string;
-}
+import { getLevel } from '@/utils/decode';
+import { getPhone } from '@/utils/getPhone';
+import { DutyData, ProfileProps } from '@/lib/types';
+import { MODAL_TEXTS } from '@/constants/modals';
 
 const DutyDataInitial = {
   deptName: '',
@@ -49,11 +47,11 @@ export const CalDutylModal = ({ date }: { date: string }) => {
             </div>
           </NameCard>
           <DataCard>
-            <div className="dataTitle">전화번호</div>
+            <div className="dataTitle">{MODAL_TEXTS.phone}</div>
             <div className="dataText">{getPhone(duty.phone)}</div>
           </DataCard>
           <DataCard>
-            <div className="dataTitle">이메일</div>
+            <div className="dataTitle">{MODAL_TEXTS.email}</div>
             <div className="dataText">{duty.email}</div>
           </DataCard>
         </UserInfo>
@@ -71,11 +69,13 @@ const Container = styled.div`
   width: 100%;
   margin-bottom: 40px;
 `;
+
 const DateWrap = styled.div`
   color: ${props => props.theme.primary};
   font-weight: 700;
   margin-bottom: 32px;
 `;
+
 const UserWrap = styled.div`
   display: flex;
   gap: 32px;
@@ -83,6 +83,7 @@ const UserWrap = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
 const UserImg = styled.div<ProfileProps>`
   width: 140px;
   height: 140px;
@@ -101,6 +102,7 @@ const UserInfo = styled.div`
 
 const NameCard = styled.div`
   margin-bottom: 16px;
+
   .name {
     font-size: 24px;
     font-weight: 700;

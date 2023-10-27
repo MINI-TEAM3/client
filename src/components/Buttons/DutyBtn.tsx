@@ -1,6 +1,7 @@
-import styled from 'styled-components';
 import { useModal } from '@/hooks/useModal';
-import { RequestModal } from '../Modals/RequestModal';
+import { RequestModal } from '@/components/Modals/RequestModal';
+import { BUTTON_TEXTS } from '@/constants/buttons';
+import styled from 'styled-components';
 
 const DutyBtn = () => {
   const { openModal } = useModal();
@@ -11,7 +12,7 @@ const DutyBtn = () => {
     content: <RequestModal type={'duty'} />,
   };
 
-  return <Container onClick={() => openModal(modalData)}>당직 수정</Container>;
+  return <Container onClick={() => openModal(modalData)}>{BUTTON_TEXTS.duty}</Container>;
 };
 
 export default DutyBtn;

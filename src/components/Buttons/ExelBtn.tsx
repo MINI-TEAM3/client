@@ -1,11 +1,13 @@
-import styled from 'styled-components';
 import { utils, write } from 'xlsx';
 import { saveAs } from 'file-saver';
-import { hospitalDecode, getLevel, getDataCategory } from '@/utils/decode';
+import { hospitalDecode, getLevel } from '@/utils/decode';
+import { getDataCategory } from '@/utils/getDataCategory';
 import { useRecoilValue } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { Schedule } from '@/lib/types';
+import { BUTTON_TEXTS } from '@/constants/buttons';
 import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const ExelBtn = ({ data }: { data: Schedule[] }) => {
   const UserData = useRecoilValue(UserDataState);
@@ -55,6 +57,7 @@ const ExelBtn = ({ data }: { data: Schedule[] }) => {
 
     saveAs(excelFile, excelFileName + excelFileExtension);
   };
+
   const handleClickDownload = () => {
     if (data.length > 0) {
       excelDownload();
@@ -63,7 +66,7 @@ const ExelBtn = ({ data }: { data: Schedule[] }) => {
     }
   };
 
-  return <Container onClick={handleClickDownload}>엑셀 파일 다운로드</Container>;
+  return <Container onClick={handleClickDownload}>{BUTTON_TEXTS.exel}</Container>;
 };
 
 export default ExelBtn;
