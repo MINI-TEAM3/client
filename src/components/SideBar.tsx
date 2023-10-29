@@ -11,6 +11,7 @@ import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage } from '@/lib/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
+import Btn from '@/components/Buttons/Btn';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
@@ -129,8 +130,11 @@ const SideBar = () => {
             <span className="label-date">{User.duty}일</span>
           </DataRow>
         </UserSchedule>
-        <AnnualBtn />
-        <DutyBtn />
+        <Btn content="퇴근" />
+        <BtnContainer>
+          <AnnualBtn />
+          <DutyBtn />
+        </BtnContainer>
         <LogoutBtn onClick={handleClickLogout}>{SIDE_BAR_TEXTS.logout}</LogoutBtn>
         <Mark>{SIDE_BAR_TEXTS.mark}</Mark>
       </Wrapper>
@@ -288,4 +292,9 @@ const LogoutBtn = styled.button`
 const Mark = styled.span`
   font-size: 0.75rem;
   color: ${props => props.theme.lightGray};
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `;

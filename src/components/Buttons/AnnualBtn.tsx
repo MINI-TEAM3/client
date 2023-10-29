@@ -21,7 +21,7 @@ const Container = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 240px;
+  width: 120px;
   height: 40px;
   border: 0;
   border-radius: 8px;
