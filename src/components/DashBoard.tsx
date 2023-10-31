@@ -14,7 +14,7 @@ const DashBoard = ({ day = '-', week = '-', month = '-' }: DashBoardProps) => {
       <Part>
         <Title>{DASH_BOARD_TEXTS.week.title}</Title>
         <Data>{week}</Data>
-        <Description>{DASH_BOARD_TEXTS.week.description}.</Description>
+        <Description>{DASH_BOARD_TEXTS.week.description}</Description>
       </Part>
       <Line />
       <Part>
