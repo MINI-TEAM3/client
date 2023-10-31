@@ -35,30 +35,34 @@ const SignUp = () => {
 
   // 등록된 병원 리스트 확인 (Select Box)
   const getHospital = async () => {
-    await getHospitalList().then(res => {
+    try {
+      const res = await getHospitalList();
       if (res.success) {
         setHospitalInfo(res.item);
         const hospitalNames = res.item.map((v: { hospitalName: string }) => v.hospitalName);
         setHospitalList(hospitalNames);
       }
-    });
+    } catch (error) {
+      console.error('병원 리스트 조회 실패', error);
+    }
   };
 
   // 선택한 병원의 과 확인 (Select Box)
   const getHospitalDeptList = async (hospitalName: string) => {
     const hospitalId: number = hospitalList.indexOf(hospitalName) + 1;
     if (hospitalId) {
-      await getDeptList(hospitalId)
-        .then(res => {
-          if (res.success) {
-            setHospitalDeptInfo(Object.values(res.item));
-            const deptList: string[] = Object.values(
-              res.item.map((v: { deptName: string }) => v.deptName).sort((a: number, b: number) => (a < b ? -1 : 1)),
-            );
-            setHospitalDeptList(deptList);
-          }
-        })
-        .catch(error => console.error(error));
+      try {
+        const res = await getDeptList(hospitalId);
+        if (res.success) {
+          setHospitalDeptInfo(Object.values(res.item));
+          const deptList: string[] = Object.values(
+            res.item.map((v: { deptName: string }) => v.deptName).sort((a: number, b: number) => (a < b ? -1 : 1)),
+          );
+          setHospitalDeptList(deptList);
+        }
+      } catch (error) {
+        console.error('병원 과 리스트 조회 실패', error);
+      }
     }
   };
 
@@ -85,6 +89,7 @@ const SignUp = () => {
       console.error();
       return;
     }
+
     const body = {
       email,
       password,
@@ -93,15 +98,17 @@ const SignUp = () => {
       deptId,
       phone,
     };
-    await signUp(body)
-      .then(res => {
-        if (res.success) {
-          if (confirm('회원가입 성공!\n로그인 페이지로 이동하시겠습니까?')) {
-            navigate('/login');
-          }
+
+    try {
+      const res = await signUp(body);
+      if (res.success) {
+        if (confirm('회원가입 성공!\n로그인 페이지로 이동하시겠습니까?')) {
+          navigate('/login');
         }
-      })
-      .catch(error => console.error('회원가입 실패', error));
+      }
+    } catch (error) {
+      console.error('회원가입 실패', error);
+    }
   };
 
   return (

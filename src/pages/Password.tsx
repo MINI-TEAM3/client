@@ -24,16 +24,18 @@ const UserInfo = () => {
       oldPassword,
       newPassword,
     };
-    await editPassword(body)
-      .then(res => {
-        if (res.success) {
-          alert(PW_TEXTS.success);
-          logout();
-          localStorage.removeItem('authToken');
-          navigate('/login');
-        }
-      })
-      .catch(error => console.error('비밀번호 변경 실패', error));
+
+    try {
+      const res = await editPassword(body);
+      if (res.success) {
+        alert(PW_TEXTS.success);
+        logout();
+        localStorage.removeItem('authToken');
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('비밀번호 변경 실패', error);
+    }
   };
 
   return (

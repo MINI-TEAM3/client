@@ -11,10 +11,9 @@ import {
   EditDutyBody,
 } from '@/lib/types';
 
-const host =
-  window.location.hostname === 'localhost'
-    ? 'http://ec2-15-164-101-55.ap-northeast-2.compute.amazonaws.com:8080/'
-    : 'api';
+const { VITE_BASE_URL } = import.meta.env;
+
+const host = window.location.hostname === 'localhost' ? VITE_BASE_URL : 'api';
 
 const instance = axios.create({
   baseURL: host,

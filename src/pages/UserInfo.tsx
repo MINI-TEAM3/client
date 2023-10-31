@@ -8,10 +8,10 @@ import { useRecoilState } from 'recoil';
 import { login, editMyPage } from '@/lib/api';
 import { FiAlertCircle } from 'react-icons/fi';
 import { ProfileBody, Password, DeptDecode } from '@/lib/types';
+import { USER_INFO_TEXTS } from '@/constants/userInfo';
 import Loading from '@/components/Loading';
 import Btn from '@/components/Buttons/Btn';
 import styled from 'styled-components';
-import { USER_INFO_TEXTS } from '@/constants/userInfo';
 
 const UserInfo = () => {
   const {
@@ -21,12 +21,14 @@ const UserInfo = () => {
     watch,
   } = useForm<ProfileBody, LoginBody>({ mode: 'onChange' });
 
+  const { VITE_BASE_URL } = import.meta.env;
+
   const [user] = useRecoilState<UserData>(UserDataState);
+
   const [passwordChecked, setPasswordChecked] = useState<boolean>(false);
-  const [imgPreview, setImgPreview] = useState(
-    `http://ec2-15-164-101-55.ap-northeast-2.compute.amazonaws.com:8080/${user.profileImageUrl}`,
-  );
+  const [imgPreview, setImgPreview] = useState(`${VITE_BASE_URL}${user.profileImageUrl}`);
   const [isLoading, setIsLoading] = useState(false);
+
   const userImg = watch('originImage');
 
   useEffect(() => {
@@ -42,19 +44,22 @@ const UserInfo = () => {
 
   // 비밀번호 재확인
   const checkPassword = async (password: Password) => {
-    setIsLoading(true);
     const body = {
       email: user.email,
       password: password.password,
     };
-    await login(body)
-      .then(res => {
-        if (res?.status === 200) {
-          setPasswordChecked(!passwordChecked);
-        }
-      })
-      .catch(error => console.error(USER_INFO_TEXTS.errors.failCheckPW, error));
-    setIsLoading(false);
+
+    try {
+      setIsLoading(true);
+      const res = await login(body);
+      if (res?.status === 200) {
+        setPasswordChecked(!passwordChecked);
+      }
+    } catch (error) {
+      console.error(USER_INFO_TEXTS.errors.failCheckPW, error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 개인정보 수정
@@ -99,17 +104,19 @@ const UserInfo = () => {
 
     //* 모달 연결 후 텍스트 상수화 진행하기
     if (confirm('개인정보를 수정하시겠습니까?')) {
-      setIsLoading(true);
-      editMyPage(body)
-        .then(res => {
-          if (res.success) {
-            alert('개인정보 수정이 완료되었습니다.');
-            location.reload();
-          }
-        })
-        .catch(error => console.error('개인정보 수정 실패', error));
+      try {
+        setIsLoading(true);
+        const res = await editMyPage(body);
+        if (res.success) {
+          alert('개인정보 수정이 완료되었습니다.');
+          location.reload();
+        }
+      } catch (error) {
+        console.error('개인정보 수정 실패', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-    setIsLoading(false);
   };
 
   return (
