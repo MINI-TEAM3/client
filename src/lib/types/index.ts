@@ -184,6 +184,12 @@ export interface ModalBtnProps {
   handler: () => void;
 }
 
+export interface ModalState {
+  isOpen: boolean;
+  title: string;
+  content: JSX.Element | string;
+}
+
 // 사이드바
 export interface MenuItemProps {
   to: string;
@@ -222,4 +228,11 @@ export interface DeptDecode {
 
 export interface DeptNameDecode {
   [key: number]: string;
+}
+
+// Alert
+export interface AlertState {
+  isOpen: boolean;
+  content: JSX.Element | string;
+  type: string;
 }

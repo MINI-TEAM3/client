@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { hospitalDecode } from '@/utils/decode';
-import { LoginBody, UserData } from '@/lib/types';
+import { LoginBody, UserData, AlertState } from '@/lib/types';
 import { PWValidation, nameValidation, phoneValidation } from '@/lib/Validation';
-import { UserDataState } from '@/states/stateUserdata';
 import { useRecoilState } from 'recoil';
+import { UserDataState } from '@/states/stateUserdata';
+import { alertState } from '@/states/stateAlert';
 import { login, editMyPage } from '@/lib/api';
 import { FiAlertCircle } from 'react-icons/fi';
 import { ProfileBody, Password, DeptDecode } from '@/lib/types';
 import { USER_INFO_TEXTS } from '@/constants/userInfo';
 import Loading from '@/components/Loading';
 import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const UserInfo = () => {
@@ -24,6 +26,7 @@ const UserInfo = () => {
   const { VITE_BASE_URL } = import.meta.env;
 
   const [user] = useRecoilState<UserData>(UserDataState);
+  const [alert, setAlert] = useRecoilState<AlertState>(alertState);
 
   const [passwordChecked, setPasswordChecked] = useState<boolean>(false);
   const [imgPreview, setImgPreview] = useState(`${VITE_BASE_URL}${user.profileImageUrl}`);
@@ -121,6 +124,7 @@ const UserInfo = () => {
 
   return (
     <>
+      <Alert />
       {!passwordChecked ? (
         <PWCheckContainer>
           {isLoading && <Loading />}
