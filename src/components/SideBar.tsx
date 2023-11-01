@@ -4,17 +4,15 @@ import { styled } from 'styled-components';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
-import AnnualBtn from '@/components/Buttons/AnnualBtn';
-import DutyBtn from '@/components/Buttons/DutyBtn';
 import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage } from '@/lib/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
-import Btn from '@/components/Buttons/Btn';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
+import StyledButton from './Buttons/StyledButton';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
@@ -130,10 +128,10 @@ const SideBar = () => {
             <span className="label-date">{User.duty}일</span>
           </DataRow>
         </UserSchedule>
-        <Btn content="퇴근" />
+        <StyledButton type="onschedule" size="big" />
         <BtnContainer>
-          <AnnualBtn />
-          <DutyBtn />
+          <StyledButton type="annual" size="small" />
+          <StyledButton type="duty" size="small" />
         </BtnContainer>
         <LogoutBtn onClick={handleClickLogout}>{SIDE_BAR_TEXTS.logout}</LogoutBtn>
         <Mark>{SIDE_BAR_TEXTS.mark}</Mark>

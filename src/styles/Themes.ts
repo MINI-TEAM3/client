@@ -9,7 +9,9 @@ const themes: DefaultTheme = {
   lightGray: '#CECECE',
   middleGray: '#D9D9D9',
   green: '#5AB543',
+  lightgreen: '#E0FFD8',
   red: '#C13030',
+  lightred: '#FFBFBF',
   bgColor: '#F4F4F4',
 };
 
