@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getDuty } from '@/lib/api';
-import { styled } from 'styled-components';
 import { getLevel } from '@/utils/decode';
 import { getPhone } from '@/utils/getPhone';
-import { DutyData, ProfileProps } from '@/lib/types';
+import { AlertState, DutyData, ProfileProps } from '@/lib/types';
 import { MODAL_TEXTS } from '@/constants/modals';
+import { useRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
+import styled from 'styled-components';
 
 const DutyDataInitial = {
   deptName: '',
@@ -17,15 +19,26 @@ const DutyDataInitial = {
   username: '',
 };
 
-const baseUrl = 'http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com';
-
 export const CalDutylModal = ({ date }: { date: string }) => {
+  const { VITE_BASE_URL } = import.meta.env;
+
   const [duty, setDuty] = useState<DutyData>(DutyDataInitial);
+  const [, setAlert] = useRecoilState<AlertState>(alertState);
 
   useEffect(() => {
     (async () => {
-      const data = await getDuty(date);
-      setDuty(data.item);
+      try {
+        const res = await getDuty(date);
+        if (res.success) {
+          setDuty(res.item);
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `당직 인원 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -37,7 +50,7 @@ export const CalDutylModal = ({ date }: { date: string }) => {
         {duty.profileImageUrl === null ? (
           <UserImg $imgurl="/user.png" />
         ) : (
-          <UserImg $imgurl={baseUrl + duty.profileImageUrl} />
+          <UserImg $imgurl={VITE_BASE_URL + duty.profileImageUrl} />
         )}
         <UserInfo>
           <NameCard>

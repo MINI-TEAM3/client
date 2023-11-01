@@ -78,6 +78,8 @@ const IconWrap = styled.div`
 const Contents = styled.div`
   display: flex;
   font-size: 14px;
+  text-align: center;
+  line-height: 1.5;
   white-space: pre-wrap;
 `;
 

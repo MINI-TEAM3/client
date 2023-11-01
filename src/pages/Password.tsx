@@ -2,10 +2,13 @@ import { useForm } from 'react-hook-form';
 import { PWValidation } from '@/lib/Validation';
 import { editPassword, logout } from '@/lib/api';
 import { useNavigate } from 'react-router';
+import { useRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
 import { FiAlertCircle } from 'react-icons/fi';
-import { EditPasswordBody, EditPasswordForm } from '@/lib/types';
+import { EditPasswordBody, EditPasswordForm, AlertState } from '@/lib/types';
 import { PW_TEXTS } from '@/constants/password';
 import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const UserInfo = () => {
@@ -15,6 +18,8 @@ const UserInfo = () => {
     watch,
     formState: { errors },
   } = useForm<EditPasswordForm>({ mode: 'onChange' });
+
+  const [, setAlert] = useRecoilState<AlertState>(alertState);
 
   const navigate = useNavigate();
 
@@ -28,18 +33,27 @@ const UserInfo = () => {
     try {
       const res = await editPassword(body);
       if (res.success) {
-        alert(PW_TEXTS.success);
-        logout();
+        setAlert({
+          isOpen: true,
+          content: PW_TEXTS.success,
+          type: 'error',
+        });
+        await logout();
         localStorage.removeItem('authToken');
         navigate('/login');
       }
     } catch (error) {
-      console.error('비밀번호 변경 실패', error);
+      setAlert({
+        isOpen: true,
+        content: `비밀번호 변경 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
   return (
     <Container>
+      <Alert />
       <Title>
         <h2>{PW_TEXTS.title}</h2>
       </Title>

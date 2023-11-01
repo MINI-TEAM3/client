@@ -2,19 +2,34 @@ import { MODAL_TEXTS } from '@/constants/modals';
 import { useModal } from '@/hooks/useModal';
 import { cancelAnnual } from '@/lib/api';
 import { useNavigate } from 'react-router';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { AlertState } from '@/lib/types';
+import { alertState } from '@/states/stateAlert';
 
 const CheckModal = ({ type }: { type: string | number }) => {
   const navigate = useNavigate();
   const { closeModal } = useModal();
+  const [, setAlert] = useRecoilState<AlertState>(alertState);
 
   const destination = `/${type}`;
 
   const handleOnClickYes = async () => {
     if (typeof type === 'number') {
-      await cancelAnnual(type, { id: type });
-      closeModal();
-      location.reload();
+      try {
+        const res = await cancelAnnual(type, { id: type });
+        if (res.success) {
+          closeModal();
+          location.reload();
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `연차 신청 취소 실패\n${error}`,
+          type: 'error',
+        });
+      }
     } else {
       closeModal();
       navigate(destination);
@@ -24,6 +39,7 @@ const CheckModal = ({ type }: { type: string | number }) => {
 
   return (
     <Container>
+      <Alert />
       {typeof type === 'string' && <div>{MODAL_TEXTS.check}</div>}
       <BtnWrap>
         <AnswerBtn className="yseBtn" onClick={() => handleOnClickYes()}>

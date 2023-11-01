@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router';
 import { getSchedule } from '@/lib/api';
-import { Schedule } from '@/lib/types';
+import { Schedule, AlertState } from '@/lib/types';
 import { CALENDAR_TEXTS } from '@/constants/calendar';
+import { alertState } from '@/states/stateAlert';
 import CalendarBody from '@/components/Calendar/CalendarBody';
 import CalendarList from '@/components/Calendar/CalendarList';
 import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
@@ -17,14 +20,27 @@ const Calendar = () => {
   const [annualActive, setAnnualActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [, setAlert] = useRecoilState<AlertState>(alertState);
+
   const navigate = useNavigate();
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
   const fetchData = async () => {
-    setIsLoading(true);
-    const data = await getSchedule();
-    setScheduleData(data.item);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const res = await getSchedule();
+      if (res.success) {
+        setScheduleData(res.item);
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `메인 캘린더 조회 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -62,6 +78,7 @@ const Calendar = () => {
   return (
     <Container>
       {isLoading && <Loading />}
+      <Alert />
       <ToggleButton>
         <Button
           className={toggleButton ? 'calendar-button active' : 'calendar-button'}

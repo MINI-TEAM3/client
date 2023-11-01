@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { useRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
 import { getHospitalList, getDeptList, signUp } from '@/lib/api';
 import {
   emailValidation,
@@ -11,18 +13,21 @@ import {
   deptValidation,
 } from '@/lib/Validation';
 import { FiAlertCircle } from 'react-icons/fi';
-import { SignUpForm, Hospital, Department } from '@/lib/types';
+import { SignUpForm, Hospital, Department, AlertState } from '@/lib/types';
 import { SIGN_UP_TEXTS } from '@/constants/signup';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
 import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const SignUp = () => {
   const [hospitalList, setHospitalList] = useState<string[]>([]);
-  const [hospitalInfo, setHospitalInfo] = useState<Hospital[]>([]); // 타입 변경
+  const [hospitalInfo, setHospitalInfo] = useState<Hospital[]>([]);
   const [hospitalDeptList, setHospitalDeptList] = useState<string[]>([]);
-  const [hospitalDeptInfo, setHospitalDeptInfo] = useState<Department[]>([]); // 타입 변경
+  const [hospitalDeptInfo, setHospitalDeptInfo] = useState<Department[]>([]);
+
+  const [, setAlert] = useRecoilState<AlertState>(alertState);
 
   const {
     register,
@@ -43,7 +48,11 @@ const SignUp = () => {
         setHospitalList(hospitalNames);
       }
     } catch (error) {
-      console.error('병원 리스트 조회 실패', error);
+      setAlert({
+        isOpen: true,
+        content: `병원 리스트 조회 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
@@ -61,7 +70,11 @@ const SignUp = () => {
           setHospitalDeptList(deptList);
         }
       } catch (error) {
-        console.error('병원 과 리스트 조회 실패', error);
+        setAlert({
+          isOpen: true,
+          content: `병원 과 리스트 조회 실패\n${error}`,
+          type: 'error',
+        });
       }
     }
   };
@@ -107,12 +120,17 @@ const SignUp = () => {
         }
       }
     } catch (error) {
-      console.error('회원가입 실패', error);
+      setAlert({
+        isOpen: true,
+        content: `회원가입 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
   return (
     <Container>
+      <Alert />
       <ImgContainer1 />
       <TextWrap>
         <span>{SIGN_UP_TEXTS.title}</span>

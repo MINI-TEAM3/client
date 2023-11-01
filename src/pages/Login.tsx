@@ -42,10 +42,10 @@ const Login = () => {
       });
     } else {
       try {
-        const response = await login({ email: data.email, password: data.password });
-        if (response && response.data.success) {
+        const res = await login({ email: data.email, password: data.password });
+        if (res && res.data.success) {
           setLoginError('');
-          const token = response.headers.authorization;
+          const token = res.headers.authorization;
           saveTokenToLocalstorage(token);
           navigate('/');
         } else {
