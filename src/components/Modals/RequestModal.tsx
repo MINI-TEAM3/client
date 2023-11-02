@@ -28,13 +28,15 @@ export const RequestModal = ({ type }: { type: string }) => {
 
     if (type === 'annual') {
       try {
-        await createAnnual({
+        const res = await createAnnual({
           startDate: data.startDate,
           endDate: data.endDate,
           reason: data.reason,
         });
-        closeModal();
-        openModal(modalData);
+        if (res.success) {
+          closeModal();
+          openModal(modalData);
+        }
       } catch (error) {
         setErrorMessage(MODAL_TEXTS.errors.failApplyAnnual);
       }
@@ -64,7 +66,7 @@ export const RequestModal = ({ type }: { type: string }) => {
 
     if (type === 'annualEdit') {
       try {
-        await editAnnual(
+        const res = await editAnnual(
           {
             startDate: data.startDate,
             endDate: data.endDate,
@@ -72,8 +74,10 @@ export const RequestModal = ({ type }: { type: string }) => {
           },
           scheduleId,
         );
-        closeModal();
-        openModal(modalData);
+        if (res.success) {
+          closeModal();
+          openModal(modalData);
+        }
       } catch (error) {
         setErrorMessage(MODAL_TEXTS.errors.failEditAnnual);
       }

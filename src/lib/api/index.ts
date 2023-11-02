@@ -102,30 +102,22 @@ export const getDuty = async (date: string) => {
 
 // 요청 내역 확인
 export const getRequest = async (userId: number) => {
-  try {
-    const res = await instance.get(`/schedule/${userId}`, {
-      headers: {
-        Authorization: `${localStorage.getItem('authToken')}`,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    return error;
-  }
+  const res = await instance.get(`/schedule/${userId}`, {
+    headers: {
+      Authorization: `${localStorage.getItem('authToken')}`,
+    },
+  });
+  return res.data;
 };
 
 // 연차 등록
 export const createAnnual = async (body: CreateAnnualBody) => {
-  try {
-    const res = await instance.post('/schedule/create/annual', body, {
-      headers: {
-        Authorization: `${localStorage.getItem('authToken')}`,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    return error;
-  }
+  const res = await instance.post('/schedule/create/annual', body, {
+    headers: {
+      Authorization: `${localStorage.getItem('authToken')}`,
+    },
+  });
+  return res.data;
 };
 
 // 연차 내용 수정
