@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { hospitalDecode } from '@/utils/decode';
 import { LoginBody, UserData, AlertState } from '@/lib/types';
 import { PWValidation, nameValidation, phoneValidation } from '@/lib/Validation';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { alertState } from '@/states/stateAlert';
 import { login, editMyPage } from '@/lib/api';
@@ -26,7 +26,7 @@ const UserInfo = () => {
   const { VITE_BASE_URL } = import.meta.env;
 
   const [user] = useRecoilState<UserData>(UserDataState);
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const [passwordChecked, setPasswordChecked] = useState<boolean>(false);
   const [imgPreview, setImgPreview] = useState<string>(`${VITE_BASE_URL}${user.profileImageUrl}`);

@@ -9,7 +9,7 @@ import DutyBtn from '@/components/Buttons/DutyBtn';
 import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage } from '@/lib/api';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
@@ -17,7 +17,7 @@ import { alertState } from '@/states/stateAlert';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [isMyPageActive, setIsMyPageActive] = useState('false');

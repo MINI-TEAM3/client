@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { getAnnual } from '@/lib/api';
 import { getLevel } from '@/utils/decode';
 import { getPhone } from '@/utils/getPhone';
@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 export const CalAnnualModal = ({ date }: { date: string }) => {
   const [annual, setAnnual] = useState<AnnualData[]>([]);
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   useEffect(() => {
     (async () => {

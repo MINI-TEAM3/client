@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router';
 import { getSchedule } from '@/lib/api';
 import { Schedule, AlertState } from '@/lib/types';
@@ -20,7 +20,7 @@ const Calendar = () => {
   const [annualActive, setAnnualActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const navigate = useNavigate();
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];

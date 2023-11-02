@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
 import { getHospitalList, getDeptList, signUp } from '@/lib/api';
 import {
@@ -27,7 +27,7 @@ const SignUp = () => {
   const [hospitalDeptList, setHospitalDeptList] = useState<string[]>([]);
   const [hospitalDeptInfo, setHospitalDeptInfo] = useState<Department[]>([]);
 
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const {
     register,

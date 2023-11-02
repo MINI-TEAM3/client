@@ -5,7 +5,7 @@ import { UserDataState } from '@/states/stateUserdata';
 import { getCategory } from '@/utils/getCategory';
 import { getEvaluation } from '@/utils/getEvaluation';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { RequestModal } from '@/components/Modals/RequestModal';
 import { AlertState, Request } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
@@ -18,7 +18,7 @@ import styled from 'styled-components';
 const RequestList = () => {
   const userDataState = useRecoilValue(UserDataState);
   const setScheduleId = useSetRecoilState(scheduleIdState);
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const userID = userDataState.id;
 

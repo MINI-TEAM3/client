@@ -4,7 +4,7 @@ import { getLevel } from '@/utils/decode';
 import { getPhone } from '@/utils/getPhone';
 import { AlertState, DutyData, ProfileProps } from '@/lib/types';
 import { MODAL_TEXTS } from '@/constants/modals';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
 import styled from 'styled-components';
 
@@ -23,7 +23,7 @@ export const CalDutylModal = ({ date }: { date: string }) => {
   const { VITE_BASE_URL } = import.meta.env;
 
   const [duty, setDuty] = useState<DutyData>(DutyDataInitial);
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   useEffect(() => {
     (async () => {

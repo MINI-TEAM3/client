@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { PWValidation } from '@/lib/Validation';
 import { editPassword, logout } from '@/lib/api';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
 import { FiAlertCircle } from 'react-icons/fi';
 import { EditPasswordBody, EditPasswordForm, AlertState } from '@/lib/types';
@@ -19,7 +19,7 @@ const UserInfo = () => {
     formState: { errors },
   } = useForm<EditPasswordForm>({ mode: 'onChange' });
 
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const navigate = useNavigate();
 

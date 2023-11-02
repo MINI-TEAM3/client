@@ -4,7 +4,7 @@ import { AlertState } from '@/lib/types';
 export const alertState = atom<AlertState>({
   key: 'alertState',
   default: {
-    isOpen: true,
+    isOpen: false,
     content: '',
     type: 'error',
   },

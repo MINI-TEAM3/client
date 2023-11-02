@@ -4,14 +4,14 @@ import { cancelAnnual } from '@/lib/api';
 import { useNavigate } from 'react-router';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
 
 const CheckModal = ({ type }: { type: string | number }) => {
   const navigate = useNavigate();
   const { closeModal } = useModal();
-  const [, setAlert] = useRecoilState<AlertState>(alertState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const destination = `/${type}`;
 

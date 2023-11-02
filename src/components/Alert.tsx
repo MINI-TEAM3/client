@@ -1,5 +1,4 @@
-import { useRecoilValue } from 'recoil';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
 import { IoAlertCircleOutline } from 'react-icons/Io5';
 import Btn from '@/components/Buttons/Btn';
@@ -7,7 +6,7 @@ import styled from 'styled-components';
 
 const Alert = () => {
   const { isOpen, content } = useRecoilValue(alertState);
-  const [, setAlert] = useRecoilState(alertState);
+  const setAlert = useSetRecoilState(alertState);
 
   const onClickAlertClose = () => {
     setAlert({
