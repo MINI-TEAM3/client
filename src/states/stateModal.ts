@@ -1,12 +1,7 @@
 import { atom } from 'recoil';
+import { ModalState } from '@/lib/types';
 
-export type ModalType = {
-  isOpen: boolean;
-  title: string;
-  content: JSX.Element | string;
-};
-
-export const modalState = atom<ModalType>({
+export const modalState = atom<ModalState>({
   key: 'modalState',
   default: {
     isOpen: false,

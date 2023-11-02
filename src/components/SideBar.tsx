@@ -6,15 +6,19 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
 import AnnualBtn from '@/components/Buttons/AnnualBtn';
 import DutyBtn from '@/components/Buttons/DutyBtn';
+import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage } from '@/lib/api';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
-import { MenuItemProps, SubMenuProps, ProgressProps } from '@/lib/types';
+import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
+import { alertState } from '@/states/stateAlert';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [isMyPageActive, setIsMyPageActive] = useState('false');
 
@@ -22,10 +26,19 @@ const SideBar = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await getMyPage();
-      setUser(data.item);
+      try {
+        const res = await getMyPage();
+        if (res.success) {
+          setUser(res.item);
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `마이페이지 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //그래프 퍼센트 계산
@@ -47,13 +60,24 @@ const SideBar = () => {
   };
 
   const handleClickLogout = async () => {
-    await logout();
-    localStorage.removeItem('authToken');
-    navigate('/login');
+    try {
+      const res = await logout();
+      if (res.success) {
+        localStorage.removeItem('authToken');
+        navigate('/login');
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `로그아웃 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <NavLink to={'/'}>
         <Logo></Logo>
       </NavLink>

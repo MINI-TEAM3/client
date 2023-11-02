@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { hospitalDecode } from '@/utils/decode';
-import { LoginBody, UserData } from '@/lib/types';
+import { LoginBody, UserData, AlertState } from '@/lib/types';
 import { PWValidation, nameValidation, phoneValidation } from '@/lib/Validation';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
-import { useRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
 import { login, editMyPage } from '@/lib/api';
 import { FiAlertCircle } from 'react-icons/fi';
 import { ProfileBody, Password, DeptDecode } from '@/lib/types';
 import { USER_INFO_TEXTS } from '@/constants/userInfo';
 import Loading from '@/components/Loading';
 import Btn from '@/components/Buttons/Btn';
+import Alert from '@/components/Alert';
 import styled from 'styled-components';
 
 const UserInfo = () => {
@@ -24,10 +26,11 @@ const UserInfo = () => {
   const { VITE_BASE_URL } = import.meta.env;
 
   const [user] = useRecoilState<UserData>(UserDataState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const [passwordChecked, setPasswordChecked] = useState<boolean>(false);
-  const [imgPreview, setImgPreview] = useState(`${VITE_BASE_URL}${user.profileImageUrl}`);
-  const [isLoading, setIsLoading] = useState(false);
+  const [imgPreview, setImgPreview] = useState<string>(`${VITE_BASE_URL}${user.profileImageUrl}`);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const userImg = watch('originImage');
 
@@ -37,7 +40,11 @@ const UserInfo = () => {
       if (typeof file !== 'string') {
         setImgPreview(URL.createObjectURL(file));
       } else {
-        console.error(USER_INFO_TEXTS.errors.profileImg);
+        setAlert({
+          isOpen: true,
+          content: USER_INFO_TEXTS.errors.profileImg,
+          type: 'error',
+        });
       }
     }
   }, [userImg]);
@@ -52,11 +59,21 @@ const UserInfo = () => {
     try {
       setIsLoading(true);
       const res = await login(body);
-      if (res?.status === 200) {
+      if (res.data.success) {
         setPasswordChecked(!passwordChecked);
+      } else {
+        setAlert({
+          isOpen: true,
+          content: `비밀번호 재확인 실패\n다시 한 번 시도해 주세요.`,
+          type: 'error',
+        });
       }
     } catch (error) {
-      console.error(USER_INFO_TEXTS.errors.failCheckPW, error);
+      setAlert({
+        isOpen: true,
+        content: `비밀번호 재확인 실패\n${error}`,
+        type: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +107,12 @@ const UserInfo = () => {
 
         reader.readAsDataURL(file);
         return await base64Promise;
-      } else return alert(USER_INFO_TEXTS.errors.profileImgFileSize);
+      } else
+        setAlert({
+          isOpen: true,
+          content: USER_INFO_TEXTS.errors.profileImgFileSize,
+          type: 'error',
+        });
     };
 
     const image = await photoBase64Handler(originImage[0]);
@@ -108,11 +130,19 @@ const UserInfo = () => {
         setIsLoading(true);
         const res = await editMyPage(body);
         if (res.success) {
-          alert('개인정보 수정이 완료되었습니다.');
+          setAlert({
+            isOpen: true,
+            content: '개인정보 수정이 완료되었습니다.',
+            type: 'error',
+          });
           location.reload();
         }
       } catch (error) {
-        console.error('개인정보 수정 실패', error);
+        setAlert({
+          isOpen: true,
+          content: `개인정보 수정 실패\n${error}`,
+          type: 'error',
+        });
       } finally {
         setIsLoading(false);
       }
@@ -121,6 +151,7 @@ const UserInfo = () => {
 
   return (
     <>
+      <Alert />
       {!passwordChecked ? (
         <PWCheckContainer>
           {isLoading && <Loading />}

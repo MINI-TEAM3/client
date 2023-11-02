@@ -7,34 +7,50 @@ import { getEvaluation } from '@/utils/getEvaluation';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { RequestModal } from '@/components/Modals/RequestModal';
-import { Request } from '@/lib/types';
+import { AlertState, Request } from '@/lib/types';
+import { alertState } from '@/states/stateAlert';
 import { REQUEST_LIST_TEXTS } from '@/constants/requestList';
 import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
 import CheckModal from '@/components/Modals/checkModal';
 import styled from 'styled-components';
 
 const RequestList = () => {
   const userDataState = useRecoilValue(UserDataState);
-  const userID = userDataState.id;
   const setScheduleId = useSetRecoilState(scheduleIdState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
+  const userID = userDataState.id;
+
   const [requestLists, setRequestLists] = useState<Request[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { openModal } = useModal();
   const [sortBy, setSortBy] = useState('최신순');
 
+  const { openModal } = useModal();
+
   useEffect(() => {
-    setIsLoading(true);
     const getList = async () => {
-      const res = await getRequest(userID);
-      const sortedItems = Object.values(res.item) as Request[];
-      if (sortBy === REQUEST_LIST_TEXTS.latest) {
-        sortedItems.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-      } else if (sortBy === REQUEST_LIST_TEXTS.oldest) {
-        sortedItems.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      try {
+        setIsLoading(true);
+        const res = await getRequest(userID);
+        const sortedItems = Object.values(res.item) as Request[];
+        if (sortBy === REQUEST_LIST_TEXTS.latest) {
+          sortedItems.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+        } else if (sortBy === REQUEST_LIST_TEXTS.oldest) {
+          sortedItems.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        }
+        setRequestLists(sortedItems);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `요청 내역 확인 실패\n${error}`,
+          type: 'error',
+        });
+      } finally {
+        setIsLoading(false);
       }
-      setRequestLists(sortedItems);
-      setIsLoading(false);
     };
+
     getList();
   }, [userID, sortBy]);
 
@@ -101,8 +117,10 @@ const RequestList = () => {
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
   };
+
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <Header>
         <h1>{REQUEST_LIST_TEXTS.title}</h1>
