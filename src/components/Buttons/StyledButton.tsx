@@ -1,9 +1,11 @@
+import styled, { css } from 'styled-components';
+
 import { useModal } from '@/hooks/useModal';
 import { RequestModal } from '@/components/Modals/RequestModal';
 import { BUTTON_TEXTS } from '@/constants/buttons';
-import styled, { css } from 'styled-components';
+import { BtuttonData } from '@/lib/types';
 
-const StyledButton = ({ type, size }: { type: string; size: string }) => {
+const StyledButton = ({ type, size, onClick }: BtuttonData) => {
   const { openModal } = useModal();
 
   const modalData = {
@@ -15,7 +17,7 @@ const StyledButton = ({ type, size }: { type: string; size: string }) => {
   return (
     <>
       {type === 'onschedule' || type === 'offschedule' ? (
-        <Container size={size} type={type}>
+        <Container size={size} type={type} onClick={onClick}>
           {BUTTON_TEXTS[type]}
         </Container>
       ) : (
@@ -66,7 +68,7 @@ const getButtonBorder = (type: string) => {
       buttonBorder = 'red';
       break;
   }
-  return type === 'onschedule' || type === 'onschedule'
+  return type === 'onschedule' || type === 'offschedule'
     ? css`
         border: 2px solid ${props => props.theme[buttonBorder]};
       `
@@ -87,7 +89,7 @@ const getButtonTextColor = (type: string) => {
       buttonTextColor = 'red';
       break;
   }
-  return type === 'onschedule' || type === 'onschedule'
+  return type === 'onschedule' || type === 'offschedule'
     ? css`
         color: ${props => props.theme[buttonTextColor]};
       `
