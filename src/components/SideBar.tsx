@@ -75,7 +75,14 @@ const SideBar = () => {
   };
 
   const handleClickScheduleButton = async () => {
-    User.flag === 0 ? await scheduleOn() : await scheduleOff();
+    try {
+      const res = User.flag === 0 ? await scheduleOn() : await scheduleOff();
+      if (res.response.status === 200) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

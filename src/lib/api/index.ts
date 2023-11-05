@@ -179,25 +179,29 @@ export const getDeptList = async (hospitalId: number) => {
 //출근
 export const scheduleOn = async () => {
   try {
-    await instance.post('/schedule/on', null, {
+    const res = await instance.post('/schedule/on', null, {
       headers: {
         Authorization: `${localStorage.getItem('authToken')}`,
       },
     });
+    return res;
   } catch (error) {
     console.error('출근 기록 실패', error);
+    throw error;
   }
 };
 
 //퇴근
 export const scheduleOff = async () => {
   try {
-    await instance.post('/schedule/off', null, {
+    const res = await instance.post('/schedule/off', null, {
       headers: {
         Authorization: `${localStorage.getItem('authToken')}`,
       },
     });
+    return res;
   } catch (error) {
     console.error('퇴근 기록 실패', error);
+    throw error;
   }
 };
