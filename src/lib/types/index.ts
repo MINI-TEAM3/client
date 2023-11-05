@@ -250,3 +250,9 @@ export interface BtuttonData {
   size: string;
   onClick?: (_e?: React.MouseEvent<HTMLElement>) => void;
 }
+
+export interface BtuttonData {
+  type: string;
+  size: string;
+  onClick?: (_e?: React.MouseEvent<HTMLElement>) => void;
+}
