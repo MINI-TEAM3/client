@@ -6,7 +6,7 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
 import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
-import { logout, getMyPage } from '@/lib/api';
+import { logout, getMyPage, scheduleOn, scheduleOff } from '@/lib/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
@@ -74,6 +74,10 @@ const SideBar = () => {
     }
   };
 
+  const handleClickScheduleButton = async () => {
+    User.flag === 0 ? await scheduleOn() : await scheduleOff();
+  };
+
   return (
     <Container>
       <Alert />
@@ -128,7 +132,12 @@ const SideBar = () => {
             <span className="label-date">{User.duty}일</span>
           </DataRow>
         </UserSchedule>
-        <StyledButton type="onschedule" size="big" />
+        {User.flag ? (
+          <StyledButton onClick={handleClickScheduleButton} type="offschedule" size="big" />
+        ) : (
+          <StyledButton onClick={handleClickScheduleButton} type="onschedule" size="big" />
+        )}
+
         <BtnContainer>
           <StyledButton type="annual" size="small" />
           <StyledButton type="duty" size="small" />
