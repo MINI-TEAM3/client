@@ -77,11 +77,15 @@ const SideBar = () => {
   const handleClickScheduleButton = async () => {
     try {
       const res = User.flag === 0 ? await scheduleOn() : await scheduleOff();
-      if (res.response.status === 200) {
+      if (res.status === 200) {
         window.location.reload();
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `출퇴근 기록 실패\n${error}`,
+        type: 'error',
+      });
     }
   };
 
