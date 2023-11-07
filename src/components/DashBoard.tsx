@@ -1,25 +1,28 @@
-import styled from 'styled-components';
-import { DASH_BOARD_TEXTS } from '@/constants/dashBoard';
 import { DashBoardProps } from '@/lib/types';
+import { DASH_BOARD_TEXTS } from '@/constants/dashBoard';
+import { convertTime } from '@/utils/convertTime';
+import styled from 'styled-components';
 
-const DashBoard = ({ day = '-', week = '-', month = '-' }: DashBoardProps) => {
+const DashBoard = ({ data }: DashBoardProps) => {
+  const { dayWork, weekWork, monthWork } = data;
+
   return (
     <Container>
       <Part>
         <Title>{DASH_BOARD_TEXTS.day.title}</Title>
-        <Data>{day}</Data>
+        <Data>{convertTime(dayWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.day.description}</Description>
       </Part>
       <Line />
       <Part>
         <Title>{DASH_BOARD_TEXTS.week.title}</Title>
-        <Data>{week}</Data>
+        <Data>{convertTime(weekWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.week.description}</Description>
       </Part>
       <Line />
       <Part>
         <Title>{DASH_BOARD_TEXTS.month.title}</Title>
-        <Data>{month}</Data>
+        <Data>{convertTime(monthWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.month.description}</Description>
       </Part>
     </Container>

@@ -207,9 +207,13 @@ export interface ProgressProps {
 
 // 대시보드
 export interface DashBoardProps {
-  day: string;
-  week: string;
-  month: string;
+  data: DashBoardData;
+}
+
+export interface DashBoardData {
+  dayWork: string;
+  weekWork: string;
+  monthWork: string;
 }
 
 // Decode
