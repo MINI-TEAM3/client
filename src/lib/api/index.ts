@@ -168,7 +168,17 @@ export const getHospitalList = async () => {
 
 // 병원 과 리스트
 export const getDeptList = async (hospitalId: number) => {
-  const res = await instance.get(`/dept/${hospitalId}/list`);
+  const res = await instance.get(`/dept/${hospitalId}`);
+  return res.data;
+};
+
+// 근무 관리
+export const getAttendance = async () => {
+  const res = await instance.get(`/user/myPage/work`, {
+    headers: {
+      Authorization: `${localStorage.getItem('authToken')}`,
+    },
+  });
   return res.data;
 };
 
