@@ -1,3 +1,5 @@
+import { ICellRendererParams } from 'ag-grid-community';
+
 // 프로젝트에 사용되는 types 정리 //
 
 // 사용자 데이터
