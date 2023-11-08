@@ -16,12 +16,12 @@ const StyledButton = ({ type, size, onClick }: BtuttonData) => {
 
   return (
     <>
-      {type === 'onschedule' || type === 'offschedule' ? (
-        <Container size={size} type={type} onClick={onClick}>
+      {type === 'annual' || type === 'duty' ? (
+        <Container size={size} type={type} onClick={() => openModal(modalData)}>
           {BUTTON_TEXTS[type]}
         </Container>
       ) : (
-        <Container size={size} type={type} onClick={() => openModal(modalData)}>
+        <Container size={size} type={type} onClick={onClick}>
           {BUTTON_TEXTS[type]}
         </Container>
       )}
@@ -39,16 +39,16 @@ const getButtonColor = (type: string) => {
       buttonColor = 'secondary';
       break;
 
-    case 'duty':
-      buttonColor = 'primary';
-      break;
-
-    case 'onschedule':
+    case 'onSchedule':
       buttonColor = 'lightgreen';
       break;
 
-    case 'offschedule':
+    case 'offSchedule':
       buttonColor = 'lightred';
+      break;
+
+    default:
+      buttonColor = 'primary';
       break;
   }
   return css`
@@ -60,15 +60,15 @@ const getButtonBorder = (type: string) => {
   let buttonBorder: string;
 
   switch (type) {
-    case 'onschedule':
+    case 'onSchedule':
       buttonBorder = 'green';
       break;
 
-    case 'offschedule':
+    case 'offSchedule':
       buttonBorder = 'red';
       break;
   }
-  return type === 'onschedule' || type === 'offschedule'
+  return type === 'onSchedule' || type === 'offSchedule'
     ? css`
         border: 2px solid ${props => props.theme[buttonBorder]};
       `
@@ -81,15 +81,15 @@ const getButtonTextColor = (type: string) => {
   let buttonTextColor: string;
 
   switch (type) {
-    case 'onschedule':
+    case 'onSchedule':
       buttonTextColor = 'green';
       break;
 
-    case 'offschedule':
+    case 'offSchedule':
       buttonTextColor = 'red';
       break;
   }
-  return type === 'onschedule' || type === 'offschedule'
+  return type === 'onSchedule' || type === 'offSchedule'
     ? css`
         color: ${props => props.theme[buttonTextColor]};
       `
@@ -98,15 +98,36 @@ const getButtonTextColor = (type: string) => {
       `;
 };
 
+const getButtonSize = (size: string) => {
+  let buttonSize: string = '';
+
+  switch (size) {
+    case 'big':
+      buttonSize = '320px';
+      break;
+
+    case 'small':
+      buttonSize = '120px';
+      break;
+
+    case 'nomal':
+      buttonSize = '250px';
+      break;
+  }
+  return css`
+    width: ${buttonSize};
+  `;
+};
+
 const Container = styled.button<{ size: string; type: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${({ size }) => (size === 'big' ? '250px' : '120px')};
   height: 40px;
   border-radius: 8px;
   color: ${props => props.theme.white};
   ${({ type }) => getButtonColor(type)};
   ${({ type }) => getButtonBorder(type)};
   ${({ type }) => getButtonTextColor(type)};
+  ${({ size }) => getButtonSize(size)};
 `;

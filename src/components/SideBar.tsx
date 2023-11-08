@@ -12,7 +12,7 @@ import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
-import StyledButton from './Buttons/StyledButton';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
@@ -144,9 +144,9 @@ const SideBar = () => {
           </DataRow>
         </UserSchedule>
         {User.flag ? (
-          <StyledButton onClick={handleClickScheduleButton} type="offschedule" size="big" />
+          <StyledButton onClick={handleClickScheduleButton} type="offSchedule" size="nomal" />
         ) : (
-          <StyledButton onClick={handleClickScheduleButton} type="onschedule" size="big" />
+          <StyledButton onClick={handleClickScheduleButton} type="onSchedule" size="nomal" />
         )}
 
         <BtnContainer>
