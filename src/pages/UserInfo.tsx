@@ -11,9 +11,9 @@ import { FiAlertCircle } from 'react-icons/fi';
 import { ProfileBody, Password, DeptDecode } from '@/lib/types';
 import { USER_INFO_TEXTS } from '@/constants/userInfo';
 import Loading from '@/components/Loading';
-import Btn from '@/components/Buttons/Btn';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const UserInfo = () => {
   const {
@@ -176,7 +176,7 @@ const UserInfo = () => {
                 {...register('password', PWValidation)}
               />
             </PwCheckLabel>
-            <Btn content={USER_INFO_TEXTS.confirm} />
+            <StyledButton type="confirm" size="big" />
           </PWCheckFormWrapper>
         </PWCheckContainer>
       ) : (
@@ -224,7 +224,7 @@ const UserInfo = () => {
               <Input type="text" defaultValue={user?.phone} {...register('phone', phoneValidation)} />
             </Label>
             <EditBtnWrapper>
-              <Btn content={USER_INFO_TEXTS.edit} />
+              <StyledButton type="edit" size="big" />
             </EditBtnWrapper>
           </FormWrapper>
         </UserInfoContainer>

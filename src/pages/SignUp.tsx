@@ -17,9 +17,9 @@ import { SignUpForm, Hospital, Department, AlertState } from '@/lib/types';
 import { SIGN_UP_TEXTS } from '@/constants/signup';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
-import Btn from '@/components/Buttons/Btn';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const SignUp = () => {
   const [hospitalList, setHospitalList] = useState<string[]>([]);
@@ -290,7 +290,7 @@ const SignUp = () => {
             </Label>
           </InfoWrapper>
         </InfoContainer>
-        <Btn content={SIGN_UP_TEXTS.signup} />
+        <StyledButton type="signup" size="big" />
 
         <AlreadyAccount>
           <span>{SIGN_UP_TEXTS.yesAccount}</span>

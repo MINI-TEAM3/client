@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 import { login } from '@/lib/api';
 import { LoginBody } from '@/lib/types';
 import { LOGIN_TEXTS } from '@/constants/login';
-import Btn from '@/components/Buttons/Btn';
 import SignUpValidation from '@/lib/Validation/validation';
 import backgroundLogo from '/backgroundlogo.png';
 import logowhithtext from '/logowithtext.png';
 import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');
@@ -100,7 +100,7 @@ const Login = () => {
             </RejectLogin>
           </InputContainer>
           <InputContainer>
-            <Btn content={LOGIN_TEXTS.login} />
+            <StyledButton type="login" size="big" />
           </InputContainer>
         </FormWrap>
         <SignUpLink>

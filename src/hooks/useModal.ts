@@ -1,4 +1,5 @@
-import { ModalType, modalState } from '@/states/stateModal';
+import { ModalState } from '@/lib/types';
+import { modalState } from '@/states/stateModal';
 import { useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -13,7 +14,7 @@ export const useModal = () => {
     [setModalDataState],
   );
   const openModal = useCallback(
-    ({ title, content }: ModalType) =>
+    ({ title, content }: ModalState) =>
       setModalDataState({
         isOpen: true,
         title: title,
