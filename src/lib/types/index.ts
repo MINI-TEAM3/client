@@ -17,7 +17,9 @@ export interface UserData {
   annual: number;
   duty: number;
   profileImageUrl: string;
-  hiredate: string;
+  hireDate: string;
+  workStart: string;
+  flag: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -242,6 +244,12 @@ export interface AlertState {
   content: JSX.Element | string;
   type: string;
 }
+
+// Button
+export interface BtuttonData {
+  type: string;
+  size: string;
+  onClick?: (_e?: React.MouseEvent<HTMLElement>) => void;
 
 // Table
 // 근무관리 목록

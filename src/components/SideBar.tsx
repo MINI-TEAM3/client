@@ -4,16 +4,15 @@ import { styled } from 'styled-components';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
-import AnnualBtn from '@/components/Buttons/AnnualBtn';
-import DutyBtn from '@/components/Buttons/DutyBtn';
 import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
-import { logout, getMyPage } from '@/lib/api';
+import { logout, getMyPage, scheduleOn, scheduleOff } from '@/lib/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
@@ -75,6 +74,28 @@ const SideBar = () => {
     }
   };
 
+  const handleClickScheduleButton = async () => {
+    try {
+      const res = User.flag === 0 ? await scheduleOn() : await scheduleOff();
+      console.log(res);
+      if (res.success === true) {
+        window.location.reload();
+      }
+    } catch (error) {
+      User.flag === 0
+        ? setAlert({
+            isOpen: true,
+            content: `출근 기록 실패\n${error}`,
+            type: 'error',
+          })
+        : setAlert({
+            isOpen: true,
+            content: `퇴근 기록 실패\n${error}`,
+            type: 'error',
+          });
+    }
+  };
+
   return (
     <Container>
       <Alert />
@@ -129,8 +150,16 @@ const SideBar = () => {
             <span className="label-date">{User.duty}일</span>
           </DataRow>
         </UserSchedule>
-        <AnnualBtn />
-        <DutyBtn />
+        {User.flag ? (
+          <StyledButton onClick={handleClickScheduleButton} type="offSchedule" size="nomal" />
+        ) : (
+          <StyledButton onClick={handleClickScheduleButton} type="onSchedule" size="nomal" />
+        )}
+
+        <BtnContainer>
+          <StyledButton type="annual" size="small" />
+          <StyledButton type="duty" size="small" />
+        </BtnContainer>
         <LogoutBtn onClick={handleClickLogout}>{SIDE_BAR_TEXTS.logout}</LogoutBtn>
         <Mark>{SIDE_BAR_TEXTS.mark}</Mark>
       </Wrapper>
@@ -288,4 +317,9 @@ const LogoutBtn = styled.button`
 const Mark = styled.span`
   font-size: 0.75rem;
   color: ${props => props.theme.lightGray};
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `;

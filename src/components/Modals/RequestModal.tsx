@@ -7,9 +7,9 @@ import { useRecoilValue } from 'recoil';
 import { scheduleIdState } from '@/states/stateScheduleId';
 import { DataBody } from '@/lib/types';
 import { MODAL_TEXTS } from '@/constants/modals';
-import Btn from '@/components/Buttons/Btn';
 import CheckModal from '@/components/Modals/checkModal';
 import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 export const RequestModal = ({ type }: { type: string }) => {
   const scheduleId = useRecoilValue(scheduleIdState);
@@ -106,7 +106,7 @@ export const RequestModal = ({ type }: { type: string }) => {
           <span className="info-text">{errorMessage}</span>
         </InfoBox>
       )}
-      <Btn content={MODAL_TEXTS.apply} />
+      <StyledButton type="apply" size="big" />
     </Container>
   );
 };

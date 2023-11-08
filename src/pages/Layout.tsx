@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import SideBar from '@/components/SideBar';
-import MainHeader from '@/components/MainHeader';
+import MainHeader from '@/components/Header/MainHeader';
 import styled from 'styled-components';
 
 const Layout = () => {

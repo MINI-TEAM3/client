@@ -7,9 +7,9 @@ import { alertState } from '@/states/stateAlert';
 import { FiAlertCircle } from 'react-icons/fi';
 import { EditPasswordBody, EditPasswordForm, AlertState } from '@/lib/types';
 import { PW_TEXTS } from '@/constants/password';
-import Btn from '@/components/Buttons/Btn';
 import Alert from '@/components/Alert';
 import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const UserInfo = () => {
   const {
@@ -117,7 +117,7 @@ const UserInfo = () => {
           />
         </Label>
         <EditBtnWrapper>
-          <Btn content={PW_TEXTS.edit} />
+          <StyledButton type="edit" size="big" />
         </EditBtnWrapper>
       </FormWrapper>
     </Container>

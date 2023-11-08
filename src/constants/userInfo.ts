@@ -11,7 +11,6 @@ export const USER_INFO_TEXTS = Object.freeze({
   hospital: 'Hospital',
   dept: 'Department',
   phone: 'Phone Number',
-  confirm: '확인하기',
   edit: '수정하기',
   errors: {
     profileImg: 'Invalid file type or not a File/Blob',

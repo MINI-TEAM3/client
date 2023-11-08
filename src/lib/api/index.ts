@@ -181,3 +181,23 @@ export const getAttendance = async () => {
   });
   return res.data;
 };
+
+//출근
+export const scheduleOn = async () => {
+  const res = await instance.post('/schedule/on', null, {
+    headers: {
+      Authorization: `${localStorage.getItem('authToken')}`,
+    },
+  });
+  return res.data;
+};
+
+//퇴근
+export const scheduleOff = async () => {
+  const res = await instance.post('/schedule/off', null, {
+    headers: {
+      Authorization: `${localStorage.getItem('authToken')}`,
+    },
+  });
+  return res.data;
+};

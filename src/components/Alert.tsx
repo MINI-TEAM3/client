@@ -1,8 +1,8 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
 import { IoAlertCircleOutline } from 'react-icons/Io5';
-import Btn from '@/components/Buttons/Btn';
 import styled from 'styled-components';
+import StyledButton from './Buttons/StyledButton';
 
 const Alert = () => {
   const { isOpen, content } = useRecoilValue(alertState);
@@ -25,7 +25,7 @@ const Alert = () => {
           </IconWrap>
           <Contents>{content}</Contents>
           <ButtonWrap onClick={onClickAlertClose}>
-            <Btn content="확인" />
+            <StyledButton type="check" size="big" />
           </ButtonWrap>
         </Container>
       </Background>
