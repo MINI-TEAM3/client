@@ -1,3 +1,5 @@
+import { ICellRendererParams } from 'ag-grid-community';
+
 // 프로젝트에 사용되는 types 정리 //
 
 // 사용자 데이터
@@ -239,4 +241,36 @@ export interface AlertState {
   isOpen: boolean;
   content: JSX.Element | string;
   type: string;
+}
+
+// Table
+// 근무관리 목록
+export interface AttendanceList {
+  startTime: string;
+  endTime: string;
+  workTime: string;
+}
+
+// ag grid 셀 스타일
+export interface cellStyleType {
+  textAlign: string;
+  display: string;
+  alignItems: string;
+  justifyContent: string;
+}
+
+// ag grid 컬럼
+export interface ColumnData {
+  headerName: string;
+  field: string;
+  flex: number;
+  cellStyle?: cellStyleType;
+  cellRenderer?: (params: ICellRendererParams) => React.ReactNode;
+  filter?: boolean;
+}
+
+// ag grid 컴포넌트
+export interface GridTableProps {
+  rowData: AttendanceList[];
+  columnsData: ColumnData[];
 }

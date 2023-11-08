@@ -3,11 +3,12 @@ import { useSetRecoilState } from 'recoil';
 import { getAttendance } from '@/lib/api';
 import { AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
-import { ATTENDANCE_TEXTS } from '@/constants/attendance';
+import { ATTENDANCE_TEXTS, ATTENDANCE_COLUMN } from '@/constants/attendance';
 import { convertDay } from '@/utils/convertDay';
 import Loading from '@/components/Loading';
 import Alert from '@/components/Alert';
 import DashBoard from '@/components/DashBoard';
+import GridTable from '@/components/Table/GridTable';
 import styled from 'styled-components';
 
 const Attendance = () => {
@@ -16,6 +17,7 @@ const Attendance = () => {
     weekWork: '0:00:00',
     monthWork: '0:00:00',
   });
+  const [tableData, setTableData] = useState([]);
   const [date, setDate] = useState('0000년 00월 00일 (0)');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +30,7 @@ const Attendance = () => {
       const res = await getAttendance();
       if (res.success) {
         setDashBoardData(res.item);
+        setTableData(res.item.works);
       }
     } catch (error) {
       setAlert({
@@ -66,6 +69,7 @@ const Attendance = () => {
         <SubTitle>{date}</SubTitle>
       </TitleContainer>
       <DashBoard data={dashBoardData} />
+      {tableData && <GridTable rowData={tableData} columnsData={ATTENDANCE_COLUMN} />}
     </Container>
   );
 };
@@ -76,6 +80,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 70px 40px 70px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 20px;
 `;
 
 const TitleContainer = styled.div`
@@ -87,6 +95,7 @@ const Title = styled.div`
   display: flex;
   h2 {
     font-weight: 600;
+    margin: 0;
   }
 `;
 
