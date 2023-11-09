@@ -1,12 +1,16 @@
-import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import CalendarBody from '@/components/Calendar/CalendarBody';
-import CalendarList from '@/components/Calendar/CalendarList';
+import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router';
 import { getSchedule } from '@/lib/api';
-import { Schedule } from '@/lib/types';
+import { Schedule, AlertState } from '@/lib/types';
+import { CALENDAR_TEXTS } from '@/constants/calendar';
+import { alertState } from '@/states/stateAlert';
+import CalendarBody from '@/components/Calendar/CalendarBody';
+import CalendarList from '@/components/Calendar/CalendarList';
 import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();
@@ -15,14 +19,28 @@ const Calendar = () => {
   const [dutyActive, setDutyActive] = useState(false);
   const [annualActive, setAnnualActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
   const navigate = useNavigate();
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
   const fetchData = async () => {
-    setIsLoading(true);
-    const data = await getSchedule();
-    setScheduleData(data.item);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const res = await getSchedule();
+      if (res.success) {
+        setScheduleData(res.item);
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `메인 캘린더 조회 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -60,26 +78,27 @@ const Calendar = () => {
   return (
     <Container>
       {isLoading && <Loading />}
+      <Alert />
       <ToggleButton>
         <Button
           className={toggleButton ? 'calendar-button active' : 'calendar-button'}
           onClick={handleClickToggle}
           disabled={!scheduleData}
         >
-          달력
+          {CALENDAR_TEXTS.calendar}
         </Button>
         <Button
           className={toggleButton ? 'list-button' : 'list-button active'}
           onClick={handleClickToggle}
           disabled={!scheduleData}
         >
-          목록
+          {CALENDAR_TEXTS.list}
         </Button>
       </ToggleButton>
       {toggleButton ? (
         <>
           <button className="today-button" onClick={handleClickToday} disabled={!scheduleData}>
-            오늘
+            {CALENDAR_TEXTS.today}
           </button>
           <FilterButtons>
             <button
@@ -87,14 +106,14 @@ const Calendar = () => {
               onClick={handleClickDuty}
               disabled={!scheduleData}
             >
-              당직
+              {CALENDAR_TEXTS.duty}
             </button>
             <button
               className={annualActive ? 'annual-button active' : 'annual-button'}
               onClick={handleClickAnnual}
               disabled={!scheduleData}
             >
-              휴가
+              {CALENDAR_TEXTS.annual}
             </button>
           </FilterButtons>
           <Header>
@@ -149,6 +168,7 @@ const Container = styled.div`
   height: calc(100% - 64px);
   padding: 0 70px 40px 70px;
   box-sizing: border-box;
+
   .today-button {
     position: absolute;
     left: 168px;
@@ -189,6 +209,7 @@ const Button = styled.button`
   background-color: ${props => props.theme.white};
   color: ${props => props.theme.gray};
   cursor: pointer;
+
   &.calendar-button {
     width: 45px;
     border-top-left-radius: 4px;
@@ -213,6 +234,7 @@ const FilterButtons = styled.div`
   display: flex;
   margin-right: 190px;
   gap: 5px;
+
   button {
     width: 45px;
     height: 30px;
@@ -222,6 +244,7 @@ const FilterButtons = styled.div`
     background-color: ${props => props.theme.white};
     color: ${props => props.theme.gray};
     cursor: pointer;
+
     &.active {
       background-color: ${props => props.theme.primary};
       color: ${props => props.theme.white};
@@ -235,6 +258,7 @@ const Header = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 30px;
+
   .prev-button,
   .next-button,
   .calendar-button,
@@ -247,6 +271,7 @@ const Header = styled.div`
     color: ${props => props.theme.gray};
     cursor: pointer;
   }
+
   .calendar-button,
   .prev-button {
     width: 45px;
@@ -254,6 +279,7 @@ const Header = styled.div`
     border-bottom-left-radius: 4px;
     border-right: none;
   }
+
   .list-button,
   .next-button {
     width: 45px;
@@ -284,6 +310,7 @@ const Weeks = styled.div`
   border-right: 1px solid ${props => props.theme.gray};
   margin-top: 20px;
   background-color: ${props => props.theme.white};
+
   div {
     display: flex;
     justify-content: center;
@@ -293,6 +320,7 @@ const Weeks = styled.div`
     border-right: 1px solid ${props => props.theme.gray};
     color: ${props => props.theme.gray};
     font-weight: 500;
+
     &:last-child {
       padding-right: 1px;
       border-right: none;

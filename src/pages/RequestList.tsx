@@ -1,49 +1,56 @@
-import Loading from '@/components/Loading';
-import { RequestModal } from '@/components/Modals/RequestModal';
-import CheckModal from '@/components/Modals/checkModal';
 import { useModal } from '@/hooks/useModal';
 import { getRequest } from '@/lib/api';
 import { scheduleIdState } from '@/states/stateScheduleId';
 import { UserDataState } from '@/states/stateUserdata';
-import { getCategory, getEvaluation } from '@/utils/decode';
+import { getCategory } from '@/utils/getCategory';
+import { getEvaluation } from '@/utils/getEvaluation';
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { RequestModal } from '@/components/Modals/RequestModal';
+import { AlertState, Request } from '@/lib/types';
+import { alertState } from '@/states/stateAlert';
+import { REQUEST_LIST_TEXTS } from '@/constants/requestList';
+import Loading from '@/components/Loading';
+import Alert from '@/components/Alert';
+import CheckModal from '@/components/Modals/checkModal';
 import styled from 'styled-components';
-
-type Request = {
-  id: number;
-  user_id: number;
-  hospital_id: number;
-  category: string;
-  startDate: string;
-  endDate: string;
-  evaluation: string;
-  createdAt: string;
-  updated_at: string;
-};
 
 const RequestList = () => {
   const userDataState = useRecoilValue(UserDataState);
-  const userID = userDataState.id;
   const setScheduleId = useSetRecoilState(scheduleIdState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
+  const userID = userDataState.id;
+
   const [requestLists, setRequestLists] = useState<Request[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { openModal } = useModal();
   const [sortBy, setSortBy] = useState('최신순');
 
+  const { openModal } = useModal();
+
   useEffect(() => {
-    setIsLoading(true);
     const getList = async () => {
-      const res = await getRequest(userID);
-      const sortedItems = Object.values(res.item) as Request[];
-      if (sortBy === '최신순') {
-        sortedItems.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-      } else if (sortBy === '오래된순') {
-        sortedItems.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      try {
+        setIsLoading(true);
+        const res = await getRequest(userID);
+        const sortedItems = Object.values(res.item) as Request[];
+        if (sortBy === REQUEST_LIST_TEXTS.latest) {
+          sortedItems.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+        } else if (sortBy === REQUEST_LIST_TEXTS.oldest) {
+          sortedItems.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        }
+        setRequestLists(sortedItems);
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `요청 내역 확인 실패\n${error}`,
+          type: 'error',
+        });
+      } finally {
+        setIsLoading(false);
       }
-      setRequestLists(sortedItems);
-      setIsLoading(false);
     };
+
     getList();
   }, [userID, sortBy]);
 
@@ -110,42 +117,51 @@ const RequestList = () => {
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
   };
+
   return (
     <Container>
+      <Alert />
       {isLoading && <Loading />}
       <Header>
-        <h1>요청 내역</h1>
+        <h1>{REQUEST_LIST_TEXTS.title}</h1>
         <Select name="filterMenu" onChange={handleSortChange}>
-          <option value="최신순">최신순</option>
-          <option value="오래된순">오래된순</option>
+          <option value={REQUEST_LIST_TEXTS.latest}>{REQUEST_LIST_TEXTS.latest}</option>
+          <option value={REQUEST_LIST_TEXTS.oldest}>{REQUEST_LIST_TEXTS.oldest}</option>
         </Select>
       </Header>
       <TableContainer>
         <DataWrap className="title">
-          <div className="box1">No.</div>
-          <div className="box2">유형</div>
-          <div className="box3">신청날짜</div>
-          <div className="box4">희망날짜</div>
-          <div className="box5">상태</div>
-          <div className="box6">변경</div>
+          <div className="box1">{REQUEST_LIST_TEXTS.number}</div>
+          <div className="box2">{REQUEST_LIST_TEXTS.category}</div>
+          <div className="box3">{REQUEST_LIST_TEXTS.applyDate}</div>
+          <div className="box4">{REQUEST_LIST_TEXTS.preferDate}</div>
+          <div className="box5">{REQUEST_LIST_TEXTS.state}</div>
+          <div className="box6">{REQUEST_LIST_TEXTS.change}</div>
         </DataWrap>
         <ListWrap>
-          {Object.keys(requestLists).length > 0 ? renderRequestItems() : <EmptyList>요청 내역이 없습니다.</EmptyList>}
+          {Object.keys(requestLists).length > 0 ? (
+            renderRequestItems()
+          ) : (
+            <EmptyList>{REQUEST_LIST_TEXTS.noRequestList}</EmptyList>
+          )}
         </ListWrap>
       </TableContainer>
     </Container>
   );
 };
+
 const Container = styled.div`
   box-sizing: border-box;
   padding: 0 70px;
   min-width: 700px;
   min-height: 90%;
 `;
+
 const Select = styled.select`
   width: 100px;
   height: 30px;
 `;
+
 const Header = styled.header`
   display: flex;
   height: 40px;
@@ -153,6 +169,7 @@ const Header = styled.header`
   align-items: center;
   padding-bottom: 16px;
 `;
+
 const TableContainer = styled.div`
   box-sizing: border-box;
 
@@ -164,21 +181,25 @@ const TableContainer = styled.div`
   height: 90%;
   position: relative;
 `;
+
 const ListWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow: scroll;
   height: 100%;
+
   &&::-webkit-scrollbar {
     display: none;
   }
 `;
+
 const DataWrap = styled.div`
   padding: 16px 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
+
   &.title {
     border-bottom: 1px solid ${props => props.theme.gray};
     font-weight: 700;
@@ -217,6 +238,7 @@ const DataWrap = styled.div`
     }
   }
 `;
+
 const BtnBox = styled.div`
   display: flex;
   justify-content: center;
@@ -242,6 +264,7 @@ const BtnBox = styled.div`
     background-color: ${props => props.theme.middleGray};
   }
 `;
+
 const Dot = styled.div`
   width: 12px;
   height: 12px;
@@ -249,6 +272,7 @@ const Dot = styled.div`
   border-radius: 50%;
   margin-right: 8px;
 `;
+
 const EmptyList = styled.div`
   color: ${props => props.theme.lightGray};
   font-size: 28px;
@@ -258,4 +282,5 @@ const EmptyList = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 export default RequestList;

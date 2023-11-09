@@ -4,29 +4,20 @@ import { styled } from 'styled-components';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
-import AnnualBtn from '@/components/Buttons/AnnualBtn';
-import DutyBtn from '@/components/Buttons/DutyBtn';
+import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
-import { logout, getMyPage } from '@/lib/api';
-import { useRecoilState } from 'recoil';
+import { logout, getMyPage, scheduleOn, scheduleOff } from '@/lib/api';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
-
-interface MenuItemProps {
-  to: string;
-  onClick?: () => void;
-  isactive?: string;
-}
-
-interface SubMenuProps {
-  open?: boolean;
-}
-
-interface ProgressProps {
-  $percent: number;
-}
+import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
+import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
+import { alertState } from '@/states/stateAlert';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [isMyPageActive, setIsMyPageActive] = useState('false');
 
@@ -34,10 +25,19 @@ const SideBar = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await getMyPage();
-      setUser(data.item);
+      try {
+        const res = await getMyPage();
+        if (res.success) {
+          setUser(res.item);
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `마이페이지 조회 실패\n${error}`,
+          type: 'error',
+        });
+      }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //그래프 퍼센트 계산
@@ -59,36 +59,72 @@ const SideBar = () => {
   };
 
   const handleClickLogout = async () => {
-    await logout();
-    localStorage.removeItem('authToken');
-    navigate('/login');
+    try {
+      const res = await logout();
+      if (res.success) {
+        localStorage.removeItem('authToken');
+        navigate('/login');
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `로그아웃 실패\n${error}`,
+        type: 'error',
+      });
+    }
+  };
+
+  const handleClickScheduleButton = async () => {
+    try {
+      const res = User.flag === 0 ? await scheduleOn() : await scheduleOff();
+      console.log(res);
+      if (res.success === true) {
+        window.location.reload();
+      }
+    } catch (error) {
+      User.flag === 0
+        ? setAlert({
+            isOpen: true,
+            content: `출근 기록 실패\n${error}`,
+            type: 'error',
+          })
+        : setAlert({
+            isOpen: true,
+            content: `퇴근 기록 실패\n${error}`,
+            type: 'error',
+          });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <NavLink to={'/'}>
         <Logo></Logo>
       </NavLink>
       <Menu>
         <MenuItem to="/" onClick={handleClickMenu}>
           <AiOutlineClockCircle />
-          <span>전체 캘린더</span>
+          <span>{SIDE_BAR_TEXTS.calendar}</span>
         </MenuItem>
         <MenuItem to="/request" onClick={handleClickMenu}>
           <FaRegPaperPlane />
-          <span>요청 내역 확인</span>
+          <span>{SIDE_BAR_TEXTS.request}</span>
         </MenuItem>
         <MenuItem to="/userinfo" onClick={handleClickMyPage} isactive={isMyPageActive}>
           <BsFillPersonFill />
-          <span className="mypage">마이페이지</span>
+          <span className="mypage">{SIDE_BAR_TEXTS.myPage}</span>
         </MenuItem>
       </Menu>
       <SubMenu open={isSubMenuOpen}>
         <SubMenuItem to="/userinfo" onClick={handleClickSubMenu}>
-          개인정보 수정
+          {SIDE_BAR_TEXTS.userInfo}
         </SubMenuItem>
         <SubMenuItem to="/password" onClick={handleClickSubMenu}>
-          비밀번호 변경
+          {SIDE_BAR_TEXTS.password}
+        </SubMenuItem>
+        <SubMenuItem to="/attendance" onClick={handleClickSubMenu}>
+          {SIDE_BAR_TEXTS.attendance}
         </SubMenuItem>
       </SubMenu>
 
@@ -100,24 +136,32 @@ const SideBar = () => {
         </UserInfo>
         <UserSchedule>
           <DataRow>
-            <span className="label">남은 연차</span>
+            <span className="label">{SIDE_BAR_TEXTS.annual}</span>
             <ProgressBar>
               <Progress className="annual" $percent={percentData(User.annual, 15)}></Progress>
             </ProgressBar>
             <span className="label-date">{User.annual}일</span>
           </DataRow>
           <DataRow>
-            <span className="label">이번달 당직</span>
+            <span className="label">{SIDE_BAR_TEXTS.duty}</span>
             <ProgressBar>
               <Progress className="duty" $percent={percentData(User.duty, 3)}></Progress>
             </ProgressBar>
             <span className="label-date">{User.duty}일</span>
           </DataRow>
         </UserSchedule>
-        <AnnualBtn />
-        <DutyBtn />
-        <LogoutBtn onClick={handleClickLogout}>로그아웃</LogoutBtn>
-        <Mark>©Dr.Cal</Mark>
+        {User.flag ? (
+          <StyledButton onClick={handleClickScheduleButton} type="offSchedule" size="nomal" />
+        ) : (
+          <StyledButton onClick={handleClickScheduleButton} type="onSchedule" size="nomal" />
+        )}
+
+        <BtnContainer>
+          <StyledButton type="annual" size="small" />
+          <StyledButton type="duty" size="small" />
+        </BtnContainer>
+        <LogoutBtn onClick={handleClickLogout}>{SIDE_BAR_TEXTS.logout}</LogoutBtn>
+        <Mark>{SIDE_BAR_TEXTS.mark}</Mark>
       </Wrapper>
     </Container>
   );
@@ -273,4 +317,9 @@ const LogoutBtn = styled.button`
 const Mark = styled.span`
   font-size: 0.75rem;
   color: ${props => props.theme.lightGray};
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `;

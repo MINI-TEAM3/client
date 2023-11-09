@@ -1,31 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Btn from '@/components/Buttons/Btn';
-import styled from 'styled-components';
 import { hospitalDecode } from '@/utils/decode';
-import { LoginBody, UserData } from '@/lib/types';
+import { LoginBody, UserData, AlertState } from '@/lib/types';
 import { PWValidation, nameValidation, phoneValidation } from '@/lib/Validation';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
-import { useRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
 import { login, editMyPage } from '@/lib/api';
 import { FiAlertCircle } from 'react-icons/fi';
+import { ProfileBody, Password, DeptDecode } from '@/lib/types';
+import { USER_INFO_TEXTS } from '@/constants/userInfo';
 import Loading from '@/components/Loading';
-
-interface ProfileBody {
-  name: string;
-  password: string;
-  deptName: string;
-  phone: string;
-  originImage: FileList;
-}
-
-interface Password {
-  password: string;
-}
-
-interface deptDecode {
-  [key: number]: string;
-}
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const UserInfo = () => {
   const {
@@ -35,12 +23,15 @@ const UserInfo = () => {
     watch,
   } = useForm<ProfileBody, LoginBody>({ mode: 'onChange' });
 
+  const { VITE_BASE_URL } = import.meta.env;
+
   const [user] = useRecoilState<UserData>(UserDataState);
+  const setAlert = useSetRecoilState<AlertState>(alertState);
+
   const [passwordChecked, setPasswordChecked] = useState<boolean>(false);
-  const [imgPreview, setImgPreview] = useState(
-    `http://fastcampus-mini-project-env.eba-khrscmx7.ap-northeast-2.elasticbeanstalk.com${user.profileImageUrl}`,
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const [imgPreview, setImgPreview] = useState<string>(`${VITE_BASE_URL}${user.profileImageUrl}`);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const userImg = watch('originImage');
 
   useEffect(() => {
@@ -49,32 +40,49 @@ const UserInfo = () => {
       if (typeof file !== 'string') {
         setImgPreview(URL.createObjectURL(file));
       } else {
-        console.error('Invalid file type or not a File/Blob');
+        setAlert({
+          isOpen: true,
+          content: USER_INFO_TEXTS.errors.profileImg,
+          type: 'error',
+        });
       }
     }
   }, [userImg]);
 
   // 비밀번호 재확인
   const checkPassword = async (password: Password) => {
-    setIsLoading(true);
     const body = {
       email: user.email,
       password: password.password,
     };
-    await login(body)
-      .then(res => {
-        if (res?.status === 200) {
-          setPasswordChecked(!passwordChecked);
-        }
-      })
-      .catch(error => console.error('비밀번호 확인 실패', error));
-    setIsLoading(false);
+
+    try {
+      setIsLoading(true);
+      const res = await login(body);
+      if (res.data.success) {
+        setPasswordChecked(!passwordChecked);
+      } else {
+        setAlert({
+          isOpen: true,
+          content: `비밀번호 재확인 실패\n다시 한 번 시도해 주세요.`,
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `비밀번호 재확인 실패\n${error}`,
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 개인정보 수정
   const editUserInfo = async ({ name = user.name, deptName, phone = user.phone, originImage }: ProfileBody) => {
     // 과 ID 찾기
-    const findKeyByValue = (obj: deptDecode, value: string) => {
+    const findKeyByValue = (obj: DeptDecode, value: string) => {
       for (const key in obj) {
         if (obj[key] === value) {
           return Number(key);
@@ -99,7 +107,12 @@ const UserInfo = () => {
 
         reader.readAsDataURL(file);
         return await base64Promise;
-      } else return alert('이미지 용량이 너무 큽니다.\n1MB보다 작은 용량의 이미지를 사용하세요.');
+      } else
+        setAlert({
+          isOpen: true,
+          content: USER_INFO_TEXTS.errors.profileImgFileSize,
+          type: 'error',
+        });
     };
 
     const image = await photoBase64Handler(originImage[0]);
@@ -111,29 +124,41 @@ const UserInfo = () => {
       image,
     };
 
+    //* 모달 연결 후 텍스트 상수화 진행하기
     if (confirm('개인정보를 수정하시겠습니까?')) {
-      setIsLoading(true);
-      editMyPage(body)
-        .then(res => {
-          if (res.success) {
-            alert('개인정보 수정이 완료되었습니다.');
-            location.reload();
-          }
-        })
-        .catch(error => console.error('개인정보 수정 실패', error));
+      try {
+        setIsLoading(true);
+        const res = await editMyPage(body);
+        if (res.success) {
+          setAlert({
+            isOpen: true,
+            content: '개인정보 수정이 완료되었습니다.',
+            type: 'error',
+          });
+          location.reload();
+        }
+      } catch (error) {
+        setAlert({
+          isOpen: true,
+          content: `개인정보 수정 실패\n${error}`,
+          type: 'error',
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
-    setIsLoading(false);
   };
 
   return (
     <>
+      <Alert />
       {!passwordChecked ? (
         <PWCheckContainer>
           {isLoading && <Loading />}
           <Title>
-            <h2>비밀번호 확인</h2>
+            <h2>{USER_INFO_TEXTS.title.password}</h2>
           </Title>
-          <p>개인정보를 안전하게 보호하기 위해 비밀번호를 다시 한 번 확인해 주세요.</p>
+          <p>{USER_INFO_TEXTS.description}</p>
           <PWCheckFormWrapper onSubmit={handleSubmit(checkPassword)}>
             <PwCheckLabel>
               <div className="error">
@@ -147,33 +172,33 @@ const UserInfo = () => {
               <Input
                 type="password"
                 maxLength={20}
-                placeholder="현재 비밀번호를 입력해 주세요."
+                placeholder={USER_INFO_TEXTS.placeholder}
                 {...register('password', PWValidation)}
               />
             </PwCheckLabel>
-            <Btn content="확인하기" />
+            <StyledButton type="confirm" size="big" />
           </PWCheckFormWrapper>
         </PWCheckContainer>
       ) : (
         <UserInfoContainer>
           {isLoading && <Loading />}
           <Title>
-            <h2>개인정보 수정</h2>
+            <h2>{USER_INFO_TEXTS.title.editInfo}</h2>
           </Title>
           <FormWrapper id="user-info" onSubmit={handleSubmit(editUserInfo)}>
             <ProfileImgWrapper>
-              <img src={imgPreview} alt="프로필 이미지" />
+              <img src={imgPreview} alt={USER_INFO_TEXTS.profileImg} />
             </ProfileImgWrapper>
             <Label className="profile">
-              <ProfileImgEdit>변경</ProfileImgEdit>
+              <ProfileImgEdit>{USER_INFO_TEXTS.editProfileImg}</ProfileImgEdit>
               <Input type="file" accept="image/*" className="profile-img" {...register('originImage')} />
             </Label>
             <Label>
-              name
+              {USER_INFO_TEXTS.name}
               <Input type="text" defaultValue={user.name} {...register('name', nameValidation)} />
             </Label>
             <Label>
-              Hospital
+              {USER_INFO_TEXTS.hospital}
               <Select defaultValue={hospitalDecode[user.hospitalId].hospital}>
                 <option value={hospitalDecode[user.hospitalId].hospital}>
                   {hospitalDecode[user.hospitalId].hospital}
@@ -181,25 +206,25 @@ const UserInfo = () => {
               </Select>
             </Label>
             <Label>
-              Part
+              {USER_INFO_TEXTS.dept}
               <Select
                 form="user-info"
                 defaultValue={hospitalDecode[user.hospitalId].dept[user.deptId]}
                 {...register('deptName')}
               >
-                {Object.values(hospitalDecode[user.hospitalId].dept).map((v, i) => (
-                  <option key={i} value={v}>
-                    {v}
+                {Object.values(hospitalDecode[user.hospitalId].dept).map((dept, i) => (
+                  <option key={i} value={dept}>
+                    {dept}
                   </option>
                 ))}
               </Select>
             </Label>
             <Label>
-              Phone Number
+              {USER_INFO_TEXTS.phone}
               <Input type="text" defaultValue={user?.phone} {...register('phone', phoneValidation)} />
             </Label>
             <EditBtnWrapper>
-              <Btn content="수정하기" />
+              <StyledButton type="edit" size="big" />
             </EditBtnWrapper>
           </FormWrapper>
         </UserInfoContainer>

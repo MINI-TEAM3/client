@@ -1,16 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { PWValidation } from '@/lib/Validation';
-import Btn from '@/components/Buttons/Btn';
-import styled from 'styled-components';
 import { editPassword, logout } from '@/lib/api';
 import { useNavigate } from 'react-router';
+import { useSetRecoilState } from 'recoil';
+import { alertState } from '@/states/stateAlert';
 import { FiAlertCircle } from 'react-icons/fi';
-
-interface EditPasswordBody {
-  oldPassword: string;
-  newPassword: string;
-  pwCheck: string;
-}
+import { EditPasswordBody, EditPasswordForm, AlertState } from '@/lib/types';
+import { PW_TEXTS } from '@/constants/password';
+import Alert from '@/components/Alert';
+import styled from 'styled-components';
+import StyledButton from '@/components/Buttons/StyledButton';
 
 const UserInfo = () => {
   const {
@@ -18,7 +17,9 @@ const UserInfo = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<EditPasswordBody>({ mode: 'onChange' });
+  } = useForm<EditPasswordForm>({ mode: 'onChange' });
+
+  const setAlert = useSetRecoilState<AlertState>(alertState);
 
   const navigate = useNavigate();
 
@@ -28,26 +29,37 @@ const UserInfo = () => {
       oldPassword,
       newPassword,
     };
-    await editPassword(body)
-      .then(res => {
-        if (res.success) {
-          alert('비밀번호 변경이 완료되었습니다.\n다시 로그인하여 주시기 바랍니다.');
-          logout();
-          localStorage.removeItem('authToken');
-          navigate('/login');
-        }
-      })
-      .catch(error => console.error('비밀번호 변경 실패', error));
+
+    try {
+      const res = await editPassword(body);
+      if (res.success) {
+        setAlert({
+          isOpen: true,
+          content: PW_TEXTS.success,
+          type: 'error',
+        });
+        await logout();
+        localStorage.removeItem('authToken');
+        navigate('/login');
+      }
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `비밀번호 변경 실패\n${error}`,
+        type: 'error',
+      });
+    }
   };
 
   return (
     <Container>
+      <Alert />
       <Title>
-        <h2>비밀번호 수정</h2>
+        <h2>{PW_TEXTS.title}</h2>
       </Title>
       <FormWrapper onSubmit={handleSubmit(editUserPassword)}>
         <Label>
-          Password
+          {PW_TEXTS.PW}
           {errors?.oldPassword && (
             <InfoBox>
               <FiAlertCircle />
@@ -57,12 +69,12 @@ const UserInfo = () => {
           <Input
             type="password"
             maxLength={20}
-            placeholder="현재 비밀번호를 입력해 주세요."
+            placeholder={PW_TEXTS.placeholder.PW}
             {...register('oldPassword', PWValidation)}
           />
         </Label>
         <Label>
-          New Password
+          {PW_TEXTS.newPW}
           {errors?.newPassword && (
             <InfoBox>
               <FiAlertCircle />
@@ -72,19 +84,19 @@ const UserInfo = () => {
           <Input
             type="password"
             maxLength={20}
-            placeholder="8자 이상의 새 비밀번호를 입력해 주세요."
+            placeholder={PW_TEXTS.placeholder.newPW}
             {...register('newPassword', {
-              required: '새 비밀번호 입력은 필수 입력입니다.',
+              required: PW_TEXTS.validation.newPW.required,
               validate: {
                 value: (pw: string | undefined) => {
-                  if (watch('oldPassword') === pw) return '이전에 사용했던 비밀번호 입니다.';
+                  if (watch('oldPassword') === pw) return PW_TEXTS.validation.newPW.message;
                 },
               },
             })}
           />
         </Label>
         <Label>
-          New Password Check
+          {PW_TEXTS.newPWCheck}
           {errors?.pwCheck && (
             <InfoBox>
               <FiAlertCircle />
@@ -93,19 +105,19 @@ const UserInfo = () => {
           )}
           <Input
             type="password"
-            placeholder="새 비밀번호를 다시 입력해 주세요."
+            placeholder={PW_TEXTS.placeholder.newPWCheck}
             {...register('pwCheck', {
-              required: '비밀번호 확인은 필수 입력입니다.',
+              required: PW_TEXTS.validation.newPWCheck.required,
               validate: {
                 value: (pw: string | undefined) => {
-                  if (watch('newPassword') !== pw) return '비밀번호가 일치하지 않습니다.';
+                  if (watch('newPassword') !== pw) return PW_TEXTS.validation.newPWCheck.message;
                 },
               },
             })}
           />
         </Label>
         <EditBtnWrapper>
-          <Btn content="수정하기" />
+          <StyledButton type="edit" size="big" />
         </EditBtnWrapper>
       </FormWrapper>
     </Container>
@@ -145,7 +157,6 @@ const FormWrapper = styled.form`
 
 const Label = styled.label`
   width: 320px;
-  /* border: 1px solid red; */
   font-family: 'ABeeZee', sans-serif;
   font-size: 0.8rem;
   &.profile {
@@ -176,6 +187,7 @@ const Input = styled.input`
 const EditBtnWrapper = styled.div`
   margin-top: 20px;
 `;
+
 const InfoBox = styled.div`
   margin-top: 8px;
   display: flex;
@@ -186,7 +198,3 @@ const InfoBox = styled.div`
     margin-left: 8px;
   }
 `;
-<InfoBox>
-  <FiAlertCircle />
-  <div className="info-text"></div>
-</InfoBox>;

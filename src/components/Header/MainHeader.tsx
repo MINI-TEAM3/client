@@ -3,6 +3,7 @@ import { MdOutlineLocalHospital } from 'react-icons/md';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { UserDataState } from '@/states/stateUserdata';
+import WorkTimer from './WorkTimer';
 
 const MainHeader = () => {
   const UserData = useRecoilValue(UserDataState);
@@ -10,6 +11,7 @@ const MainHeader = () => {
 
   return (
     <Container>
+      <WorkTimer />
       <HosPitalName>
         <MdOutlineLocalHospital />
         {hospitalNum && <span className="hospital-name">{hospitalDecode[hospitalNum].hospital}</span>}
@@ -23,7 +25,7 @@ export default MainHeader;
 const Container = styled.div`
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 64px;
