@@ -13,10 +13,8 @@ import {
 
 const { VITE_BASE_URL } = import.meta.env;
 
-const host = window.location.hostname === 'localhost' ? VITE_BASE_URL : 'api';
-
 const instance = axios.create({
-  baseURL: host,
+  baseURL: VITE_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
