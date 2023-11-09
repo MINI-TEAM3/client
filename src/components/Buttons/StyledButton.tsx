@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { useModal } from '@/hooks/useModal';
 import { RequestModal } from '@/components/Modals/RequestModal';
 import { BUTTON_TEXTS } from '@/constants/buttons';
-import { BtuttonData } from '@/lib/types';
+import { ButtonData } from '@/lib/types';
 import { getButtonBorder, getButtonColor, getButtonSize, getButtonTextColor } from '@/components/Buttons/getButton';
 
-const StyledButton = ({ type, size, onClick }: BtuttonData) => {
+const StyledButton = ({ type, size, onClick }: ButtonData) => {
   const { openModal } = useModal();
 
   const modalData = {
