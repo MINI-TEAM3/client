@@ -246,10 +246,11 @@ export interface AlertState {
 }
 
 // Button
-export interface BtuttonData {
+export interface ButtonData {
   type: string;
   size: string;
   onClick?: (_e?: React.MouseEvent<HTMLElement>) => void;
+}
 
 // Table
 // 근무관리 목록
