@@ -1,6 +1,6 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { alertState } from '@/states/stateAlert';
-import { IoAlertCircleOutline } from 'react-icons/Io5';
+import { IoAlertCircleOutline } from 'react-icons/io5';
 import styled from 'styled-components';
 import StyledButton from './Buttons/StyledButton';
 
