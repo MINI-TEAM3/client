@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { getAttendance } from '@/lib/api';
 import { AlertState } from '@/lib/types';
@@ -24,7 +24,7 @@ const Attendance = () => {
   const setAlert = useSetRecoilState<AlertState>(alertState);
 
   // 근무 관리 데이터 호출
-  const getAttendanceData = async () => {
+  const getAttendanceData = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await getAttendance();
@@ -41,7 +41,7 @@ const Attendance = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getAttendance]);
 
   // 오늘 날짜 구하기
   const getTodayDate = () => {
@@ -50,7 +50,7 @@ const Attendance = () => {
     const date = new Date().getDate();
     const day = convertDay(new Date().getDay());
 
-    setDate(`${year}년 ${month + 1}월 ${date}일 (${day})`);
+    return setDate(`${year}년 ${month + 1}월 ${date}일 (${day})`);
   };
 
   useEffect(() => {

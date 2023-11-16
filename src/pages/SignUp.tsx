@@ -99,7 +99,11 @@ const SignUp = () => {
     }
 
     if (hospitalId === 0 || deptId === 0) {
-      console.error();
+      setAlert({
+        isOpen: true,
+        content: `병원 및 근무 과 오류 발생`,
+        type: 'error',
+      });
       return;
     }
 
@@ -442,12 +446,11 @@ const AlreadyAccount = styled.div`
 `;
 
 const InfoBox = styled.div`
-  margin: 8px 0;
+  margin: 8px 0 8px 10px;
   display: flex;
   align-items: center;
   color: red;
   font-size: 12px;
-  margin-left: 10px;
 
   .info-text {
     font-family: 'Pretendard', 'sans-serif';

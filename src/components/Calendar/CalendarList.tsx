@@ -3,7 +3,7 @@ import { Schedule } from '@/lib/types';
 import { getLevel } from '@/utils/decode';
 import { getDataCategory } from '@/utils/getDataCategory';
 import { CALENDAR_TEXTS } from '@/constants/calendar';
-import ExelBtn from '../Buttons/ExelBtn';
+import ExelBtn from '@/components/Buttons/ExelBtn';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 

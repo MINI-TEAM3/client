@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { styled } from 'styled-components';
 import { useModal } from '@/hooks/useModal';
 import { CalAnnualModal } from '@/components/Modals/CalAnnualModal';
 import { CalDutylModal } from '@/components/Modals/CalDutyModal';
 import { Schedule } from '@/lib/types';
 import { getLevel } from '@/utils/decode';
 import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const CalendarBody = ({
   scheduleData,

@@ -1,33 +1,32 @@
+import React from 'react';
 import { DashBoardProps } from '@/lib/types';
 import { DASH_BOARD_TEXTS } from '@/constants/dashBoard';
 import { convertTime } from '@/utils/convertTime';
 import styled from 'styled-components';
 
-const DashBoard = ({ data }: DashBoardProps) => {
+const DashBoard = React.memo(({ data }: DashBoardProps) => {
   const { dayWork, weekWork, monthWork } = data;
 
   return (
     <Container>
-      <Part>
+      <TodayPart>
         <Title>{DASH_BOARD_TEXTS.day.title}</Title>
         <Data>{convertTime(dayWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.day.description}</Description>
-      </Part>
-      <Line />
-      <Part>
+      </TodayPart>
+      <WeekPart>
         <Title>{DASH_BOARD_TEXTS.week.title}</Title>
         <Data>{convertTime(weekWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.week.description}</Description>
-      </Part>
-      <Line />
-      <Part>
+      </WeekPart>
+      <MonthPart>
         <Title>{DASH_BOARD_TEXTS.month.title}</Title>
         <Data>{convertTime(monthWork)}</Data>
         <Description>{DASH_BOARD_TEXTS.month.description}</Description>
-      </Part>
+      </MonthPart>
     </Container>
   );
-};
+});
 
 export default DashBoard;
 
@@ -42,7 +41,19 @@ const Container = styled.div`
   background-color: ${props => props.theme.white};
 `;
 
-const Part = styled.div`
+const TodayPart = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const WeekPart = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const MonthPart = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -61,9 +72,4 @@ const Data = styled.span`
 const Description = styled.span`
   font-size: 12px;
   color: ${props => props.theme.gray};
-`;
-
-const Line = styled.div`
-  height: 120px;
-  border: 0.5px solid ${props => props.theme.gray};
 `;
