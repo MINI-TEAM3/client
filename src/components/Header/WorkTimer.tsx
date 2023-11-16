@@ -42,8 +42,8 @@ const WorkTimer = () => {
   }, []);
 
   return (
-    <TimerContainer isworking={isWorking}>
-      <TimerBadge isworking={isWorking}>{isWorking ? 'ON' : 'OFF'}</TimerBadge>
+    <TimerContainer isWorking={isWorking}>
+      <TimerBadge isWorking={isWorking}>{isWorking ? 'ON' : 'OFF'}</TimerBadge>
       {isWorking ? formatTime() : '00:00:00'}
     </TimerContainer>
   );
@@ -51,17 +51,18 @@ const WorkTimer = () => {
 
 export default WorkTimer;
 
-const TimerContainer = styled.div<{ isworking: number }>`
-  color: ${props => (props.isworking ? 'green' : 'gray')};
+const TimerContainer = styled.div<{ isWorking: number }>`
+  color: ${props => (props.isWorking ? 'green' : 'gray')};
   justify-content: center;
   align-items: center;
   display: flex;
   gap: 8px;
 `;
-const TimerBadge = styled.div<{ isworking: number }>`
+
+const TimerBadge = styled.div<{ isWorking: number }>`
   font-size: 10px;
   color: white;
-  background-color: ${props => (props.isworking ? 'green' : 'gray')};
+  background-color: ${props => (props.isWorking ? 'green' : 'gray')};
   display: flex;
   justify-content: center;
   align-items: center;
