@@ -10,15 +10,15 @@ import CalendarList from '@/components/Calendar/CalendarList';
 import ToggleButton from '@/components/Calendar/ToggleButton';
 import Loading from '@/components/Loading';
 import Alert from '@/components/Alert';
-import dayjs from 'dayjs';
 import styled from 'styled-components';
+import dayjs from 'dayjs';
 
 const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<Schedule[]>();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [toggleButton, setToggleButton] = useState(true);
-  const [dutyActive, setDutyActive] = useState(false);
-  const [annualActive, setAnnualActive] = useState(false);
+  const [dutyActive, setDutyActive] = useState(true);
+  const [annualActive, setAnnualActive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const setAlert = useSetRecoilState<AlertState>(alertState);
@@ -143,26 +143,24 @@ const Weeks = styled.div`
   border-right: 1px solid ${props => props.theme.gray};
   margin-top: 20px;
   background-color: ${props => props.theme.white};
-
-  div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    border-right: 1px solid ${props => props.theme.gray};
-    color: ${props => props.theme.gray};
-    font-weight: 500;
-
-    &:last-child {
-      padding-right: 1px;
-      border-right: none;
-    }
-  }
+  box-sizing: border-box;
 `;
 
 const Week = styled.div`
   display: flex;
   justify-content: center;
   width: calc(100% / 7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-right: 1px solid ${props => props.theme.gray};
+  color: ${props => props.theme.gray};
+  font-weight: 500;
+  box-sizing: border-box;
+  &:last-child {
+    padding-right: 0.5px;
+    border-right: none;
+  }
 `;

@@ -17,10 +17,16 @@ const CalendarHeader = (props: CalendarHeaderProps) => {
 
   const handleClickDuty = () => {
     setDutyActive(!dutyActive);
+    if (!annualActive) {
+      setDutyActive(dutyActive);
+    }
   };
 
   const handleClickAnnual = () => {
     setAnnualActive(!annualActive);
+    if (!dutyActive) {
+      setAnnualActive(annualActive);
+    }
   };
 
   const handleClickToday = () => {
