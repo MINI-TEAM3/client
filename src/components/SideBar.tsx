@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { FaRegPaperPlane } from 'react-icons/fa';
-import Alert from '@/components/Alert';
 import { getLevel, deptName } from '@/utils/decode';
 import { logout, getMyPage, scheduleOn, scheduleOff } from '@/lib/api';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -12,7 +10,9 @@ import { UserDataState } from '@/states/stateUserdata';
 import { SIDE_BAR_TEXTS } from '@/constants/sideBar';
 import { MenuItemProps, SubMenuProps, ProgressProps, AlertState } from '@/lib/types';
 import { alertState } from '@/states/stateAlert';
+import Alert from '@/components/Alert';
 import StyledButton from '@/components/Buttons/StyledButton';
+import styled from 'styled-components';
 
 const SideBar = () => {
   const [User, setUser] = useRecoilState(UserDataState);
@@ -23,21 +23,23 @@ const SideBar = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await getMyPage();
-        if (res.success) {
-          setUser(res.item);
-        }
-      } catch (error) {
-        setAlert({
-          isOpen: true,
-          content: `마이페이지 조회 실패\n${error}`,
-          type: 'error',
-        });
+  const getMyPageData = async () => {
+    try {
+      const res = await getMyPage();
+      if (res.success) {
+        setUser(res.item);
       }
-    })();
+    } catch (error) {
+      setAlert({
+        isOpen: true,
+        content: `마이페이지 조회 실패\n${error}`,
+        type: 'error',
+      });
+    }
+  };
+
+  useEffect(() => {
+    getMyPageData();
   }, []);
 
   //그래프 퍼센트 계산
@@ -77,7 +79,6 @@ const SideBar = () => {
   const handleClickScheduleButton = async () => {
     try {
       const res = User.flag === 0 ? await scheduleOn() : await scheduleOff();
-      console.log(res);
       if (res.success === true) {
         window.location.reload();
       }
