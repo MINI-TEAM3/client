@@ -99,7 +99,11 @@ const SignUp = () => {
     }
 
     if (hospitalId === 0 || deptId === 0) {
-      console.error();
+      setAlert({
+        isOpen: true,
+        content: `병원 및 근무 과 오류 발생`,
+        type: 'error',
+      });
       return;
     }
 
